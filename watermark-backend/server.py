@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware 
+from fastapi.middleware.cors import CORSMiddleware
 from src.api_routes import api_router
 
 app = FastAPI(
@@ -13,6 +13,7 @@ origins = [
     "http://localhost:5174",
     "http://127.0.0.1:5174",
     "https://d352gwnf8fwgii.cloudfront.net",
+    "http://d352gwnf8fwgii.cloudfront.net",
 ]
 
 app.add_middleware(
