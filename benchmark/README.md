@@ -47,6 +47,9 @@ network = Network(
 EC_path = result_folder + "models/EC_" + str(model_epoch) + ".pth"
 network.load_model_ed(EC_path, device)
 
+network.encoder_decoder.eval()
+network.discriminator.eval()
+
 encoded_images = network.encoder_decoder.module.encoder(images, messages)
 encoded_images = images + (encoded_images - image) * strength_factor
 noised_images = network.encoder_decoder.module.noise([encoded_images, images])
