@@ -1,0 +1,3 @@
+[submodule "benchmark/WAVES"]
+	path = benchmark/WAVES
+	url = https://github.com/umd-huang-lab/WAVES
