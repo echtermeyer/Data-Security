@@ -26,7 +26,7 @@ How to use this for the Deep Methods
 | **Spatial** | **LSB** | Least Significant Bit | **The "Zero Robustness" Baseline.** Simple pixel-level embedding. Serves as a control to show how easily fragile watermarks are destroyed. | 🟢 Very High (CPU/Instant) | [GitHub (stego-lsb)](https://github.com/ragibson/Steganography) |
 | **Spatial** | **RAW** | RAW: Robust & Agile Watermark | **Modern Pixel-Level (Deep).** Learns a direct, zero-bit detectable pattern on the pixels. Robust to diffusion regeneration. | 🟡 Medium (PyTorch/MPS required for inference) | [GitHub (Official)](https://github.com/jeremyxianx/RAWatermark) |
 | **Deep Learning** | **MBRS** | Mini-Batch of Real & Simulated JPEG | **Compression Robustness SOTA.** Trained specifically to survive heavy JPEG compression and noise attacks. | 🟢 Low-Medium (PyTorch/MPS recommended) | [GitHub (jzyustc/MBRS)](https://github.com/jzyustc/MBRS) |
-| **Deep Learning** | **StegaStamp** | Physical-robust DNN watermark | **Distortion Robustness SOTA.** The gold standard for resistance against physical attacks (print-to-camera, rotation, cropping). | 🟡 Medium (Needs working PyTorch port/MPS) | [PyTorch Port (Example)](https://github.com/conda-inc/StegaStamp-PyTorch) |
+| **Deep Learning** | **StegaStamp** | Physical-robust DNN watermark | **Distortion Robustness SOTA.** The gold standard for resistance against physical attacks (print-to-camera, rotation, cropping). | 🟡 Medium (Needs working PyTorch port/MPS) | [PyTorch Port (Example)](https://github.com/JisongXie/StegaStamp_pytorch) |
 | **Deep Learning** | *(Optional) HiDDeN* | Classic encoder-decoder neural watermark | **Speed/Lightweight Baseline.** The foundational end-to-end neural watermark. Fast inference and a good deep learning lower bound. | 🟢 Low (PyTorch/MPS recommended) | [GitHub (ando-kh/HiDDeN)](https://github.com/ando-kh/HiDDeN) |
 
 ### Include MBRS
@@ -34,10 +34,10 @@ How to use this for the Deep Methods
 ```python
 # TODO: Fix * imports
 from torch.utils.data import DataLoader
-from utils import *
-from network.Network import *
+from mbrs.utils import *
+from mbrs.network.Network import *
 
-from utils.load_test_setting import *
+from mbrs.utils.load_test_setting import *
 
 device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
@@ -55,4 +55,16 @@ encoded_images = images + (encoded_images - image) * strength_factor
 noised_images = network.encoder_decoder.module.noise([encoded_images, images])
 
 decoded_messages = network.encoder_decoder.module.decoder(noised_images)
+```
+
+### Include RAW
+
+```python
+import torch
+from raw.scripts import raw, tools
+
+RAW = raw.RAWatermark(device = device, wm_index = 0)
+
+wm_image = RAW.encode_img(some_image)
+RAW.detect_img(wm_image, decision_thres=0.5)
 ```
