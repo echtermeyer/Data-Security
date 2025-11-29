@@ -15,7 +15,7 @@ jobs:
     # 💡 IMPORTANT: Set the default working directory for all subsequent 'run' steps
     defaults:
       run:
-        working-directory: frontend/
+        working-directory: watermark-app/
 
     steps:
       # 1. Checkout the repository code
