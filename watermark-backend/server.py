@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware  # 1. Import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware 
 from src.api_routes import api_router
 
 app = FastAPI(
@@ -9,20 +9,18 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# 2. Define allowed origins (your frontend URLs)
 origins = [
-    "http://localhost:5174",  # <--- YOUR FRONTEND URL
+    "http://localhost:5174",
     "http://127.0.0.1:5174",
-    # Add your production frontend domain here when deployed
+    "https://d352gwnf8fwgii.cloudfront.net",
 ]
 
-# 3. Add CORSMiddleware to your application
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allows requests from your frontend URL
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(api_router)
