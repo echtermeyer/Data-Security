@@ -1,50 +1,41 @@
-name: 🚀 Deploy Frontend to S3 (watermarking-data-security-lmu)
+name: Deploy Frontend to S3 (watermarking-data-security-lmu)
 
 on:
   workflow_dispatch:
     inputs:
       reason:
-        description: "Reason for deployment (e.g., hotfix, new feature, initial deploy)"
+        description: "Reason for deployment"
         required: true
-        default: "Manual deployment trigger"
+        default: "Manual deployment"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repository code
-      - name: ⬇️ Checkout repository code
+      - name: Checkout repository code
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js Environment (using Node 22)
-      - name: ⚙️ Setup Node.js v22
+      - name: Setup Node.js v22
         uses: actions/setup-node@v4
         with:
           node-version: "22"
 
-      # 3. Install dependencies and build the React app
-      # We explicitly change directory to 'watermark-app/' for the build steps
-      - name: 🏗️ Install dependencies and build
+      - name: Install dependencies and build
         run: |
-          cd watermark-app/  # Navigate into the sub-directory
+          cd watermark-app/
           npm install
           npm run build
         env:
           CI: false
 
-      # 4. Configure AWS Credentials
-      - name: 🔑 Configure AWS Credentials
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }} # 'eu-central-1'
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      # 5. Deploy the build output to S3
-      # We reference the build folder using the full path relative to the root: watermark-app/build
-      - name: ⬆️ Deploy to S3 Static Hosting
+      - name: Deploy to S3 Static Hosting
         run: |
-          # This sync command now correctly targets the 'build' folder created 
-          # inside the 'watermark-app' directory relative to the repository root.
-          aws s3 sync watermark-app/build s3://${{ secrets.AWS_S3_BUCKET }} --delete
+          aws s3 sync watermark-app/dist s3://${{ secrets.AWS_S3_BUCKET }} --delete
