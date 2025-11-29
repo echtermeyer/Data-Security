@@ -1,19 +1,21 @@
 import { useState, useRef, useEffect } from 'react';
 import { Upload, Image as ImageIcon, Shield, Zap, RotateCw, Crop, Wind, Sun, Volume2, Download, CheckCircle, XCircle, Trophy, Target, Flame, ChevronDown, Mail, Github } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
 function ChallengeMode() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageName, setSelectedImageName] = useState('');
   const [message, setMessage] = useState('');
-  const [algorithm, setAlgorithm] = useState('lsb'); // Pre-select LSB
+  const [algorithm, setAlgorithm] = useState('lsb'); 
   const [watermarkedImage, setWatermarkedImage] = useState(null);
   const [attackedImage, setAttackedImage] = useState(null);
   const [extractedMessage, setExtractedMessage] = useState(null);
-  const [status, setStatus] = useState('idle'); // idle, embedded, attacking, verified
+  const [status, setStatus] = useState('idle'); 
   const [score, setScore] = useState(0);
   const [attacksApplied, setAttacksApplied] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   
-  // Attack parameters
   const [brightness, setBrightness] = useState(0);
   const [blur, setBlur] = useState(0);
   const [noise, setNoise] = useState(0);
@@ -24,7 +26,6 @@ function ChallengeMode() {
   const canvasRef = useRef(null);
   const attackSectionRef = useRef(null);
   
-  // Sample images - store these in public/samples/
   const sampleImages = [
     { id: 1, name: 'Here for the goodies', path: '/samples/sample1.jpg' },
     { id: 2, name: 'Finally done with HCA', path: '/samples/sample2.jpg' },
@@ -39,6 +40,24 @@ function ChallengeMode() {
     { id: 'deep', name: 'Deep Learning', robustness: 5, icon: '🧠' },
   ];
 
+  const convertImageToBase64 = (imageUrl) => {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous'; 
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const dataURL = canvas.toDataURL('image/jpeg', 1.0);
+            resolve(dataURL.split(',')[1]); 
+        };
+        img.onerror = reject;
+        img.src = imageUrl;
+    });
+  };
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -48,6 +67,7 @@ function ChallengeMode() {
         setSelectedImageName(file.name);
         setWatermarkedImage(null);
         setStatus('idle');
+        setExtractedMessage(null); 
       };
       reader.readAsDataURL(file);
     }
@@ -61,23 +81,8 @@ function ChallengeMode() {
       setSelectedImageName(sample.name);
       setWatermarkedImage(null);
       setStatus('idle');
+      setExtractedMessage(null);
     }
-  };
-
-  const handleEmbed = () => {
-    // TODO: Backend API call to embed watermark
-    console.log('Embedding watermark...', { image: selectedImage, message, algorithm });
-    setWatermarkedImage(selectedImage);
-    setAttackedImage(selectedImage);
-    setStatus('embedded');
-    setScore(0);
-    setAttacksApplied(0);
-    resetAttacks();
-    
-    // Scroll to attack section
-    setTimeout(() => {
-      attackSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
   };
 
   const resetAttacks = () => {
@@ -89,9 +94,63 @@ function ChallengeMode() {
     setCropAmount(0);
   };
 
+  const handleEmbed = async () => {
+    if (!selectedImage || !message || !algorithm) return;
+
+    setIsLoading(true);
+    setStatus('idle');
+    setExtractedMessage(null);
+
+    try {
+        // 1. Convert selected image (which can be a local path or data URL) to Base64
+        const imageBase64 = await convertImageToBase64(selectedImage);
+
+        // 2. API call to embed watermark
+        const response = await fetch(`${API_BASE_URL}/api/embed`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                image: imageBase64,
+                message: message,
+                algorithm: algorithm,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // The API returns the watermarked image as a raw base64 string.
+        // We prepend the data URL prefix for browser display.
+        const newWatermarkedImage = `data:image/jpeg;base64,${data.watermarked_image}`;
+        
+        setWatermarkedImage(newWatermarkedImage);
+        setAttackedImage(newWatermarkedImage); // Start with the watermarked image as the attacked image
+        setStatus('embedded');
+        setScore(0);
+        setAttacksApplied(0);
+        resetAttacks();
+        
+        // Scroll to attack section
+        setTimeout(() => {
+          attackSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+
+    } catch (error) {
+        console.error('Embedding failed:', error);
+        setStatus('error');
+        alert(`Failed to embed watermark: ${error.message}. Check console for details.`);
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
   // Apply attacks to image in real-time
   useEffect(() => {
-    if (!watermarkedImage) return;
+    // FIX: Add 'verified' to the list of statuses that stop real-time attack rendering.
+    if (!watermarkedImage || status === 'idle' || status === 'error' || status === 'verified') return; 
 
     const img = new Image();
     img.onload = () => {
@@ -99,96 +158,135 @@ function ChallengeMode() {
       if (!canvas) return;
 
       const ctx = canvas.getContext('2d');
+      // Set canvas size to original image size
       canvas.width = img.width;
       canvas.height = img.height;
 
-      // Apply crop
+      ctx.save();
+      
+      // Clear canvas for fresh drawing
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // --- 1. Apply Transformation (Rotation/Crop) ---
+      
+      // Calculate crop dimensions
       const cropX = (img.width * cropAmount) / 200;
       const cropY = (img.height * cropAmount) / 200;
       const cropWidth = img.width - (cropX * 2);
       const cropHeight = img.height - (cropY * 2);
 
-      ctx.save();
-      
-      // Clear canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Apply rotation
+      // Apply rotation transformation on context
       if (rotation !== 0) {
         ctx.translate(canvas.width / 2, canvas.height / 2);
         ctx.rotate((rotation * Math.PI) / 180);
         ctx.translate(-canvas.width / 2, -canvas.height / 2);
       }
 
-      // Draw image (with crop if applied)
-      if (cropAmount > 0) {
-        ctx.drawImage(img, cropX, cropY, cropWidth, cropHeight, 0, 0, canvas.width, canvas.height);
-      } else {
-        ctx.drawImage(img, 0, 0);
-      }
+      // Draw the image (applying crop)
+      ctx.drawImage(img, cropX, cropY, cropWidth, cropHeight, 0, 0, canvas.width, canvas.height);
 
-      // Apply brightness
-      if (brightness !== 0) {
-        ctx.globalCompositeOperation = 'lighter';
-        ctx.fillStyle = `rgba(${brightness > 0 ? '255,255,255' : '0,0,0'},${Math.abs(brightness) / 200})`;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.globalCompositeOperation = 'source-over';
-      }
-
-      // Apply blur
+      // --- 2. Apply Filters (Blur) ---
       if (blur > 0) {
+        // Blur filter works on the whole canvas content drawn so far
         ctx.filter = `blur(${blur}px)`;
-        ctx.drawImage(canvas, 0, 0);
-        ctx.filter = 'none';
+        // Redrawing the content (itself) applies the filter
+        ctx.drawImage(canvas, 0, 0); 
+        ctx.filter = 'none'; // Reset filter
       }
 
-      // Apply noise
-      if (noise > 0) {
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        for (let i = 0; i < data.length; i += 4) {
-          if (Math.random() < noise / 100) {
+      // --- 3. Apply Pixel Manipulation (Brightness/Noise) ---
+      let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      
+      // Apply noise and brightness simultaneously for performance
+      for (let i = 0; i < data.length; i += 4) {
+        // Apply noise (randomly changes pixel color/brightness)
+        if (Math.random() * 100 < noise) {
             const noiseValue = Math.random() * 255;
             data[i] = noiseValue;
             data[i + 1] = noiseValue;
             data[i + 2] = noiseValue;
-          }
         }
-        ctx.putImageData(imageData, 0, 0);
+
+        // Apply brightness (add/subtract value from each color channel)
+        if (brightness !== 0) {
+            data[i] = Math.min(255, Math.max(0, data[i] + (255 * brightness / 100))); 
+            data[i + 1] = Math.min(255, Math.max(0, data[i + 1] + (255 * brightness / 100)));
+            data[i + 2] = Math.min(255, Math.max(0, data[i + 2] + (255 * brightness / 100)));
+        }
       }
+      ctx.putImageData(imageData, 0, 0);
 
-      ctx.restore();
+      ctx.restore(); // Restore context state
 
-      // Update attacked image
-      setAttackedImage(canvas.toDataURL('image/jpeg', compression / 100));
-      setStatus('attacking');
+      // --- 4. Get Final Attacked Image (with JPEG compression) ---
+      // Convert canvas to Data URL, applying JPEG quality (compression)
+      const newAttackedImage = canvas.toDataURL('image/jpeg', compression / 100);
+      setAttackedImage(newAttackedImage);
       
-      // Count active attacks
+      // Update status and attack count
+      setStatus('attacking'); 
       const attacks = [brightness, blur, noise, rotation, cropAmount].filter(v => v !== 0).length + (compression < 100 ? 1 : 0);
       setAttacksApplied(attacks);
     };
 
     img.src = watermarkedImage;
-  }, [watermarkedImage, brightness, blur, noise, rotation, compression, cropAmount]);
+  }, [watermarkedImage, brightness, blur, noise, rotation, compression, cropAmount, status]);
 
-  const handleExtract = () => {
-    // TODO: Backend API call to extract watermark
-    console.log('Extracting watermark...');
-    
-    // Simulate extraction with probability based on attacks
-    const damageScore = (Math.abs(brightness) / 100) + (blur / 20) + (noise / 100) + 
-                        (Math.abs(rotation) / 180) + (cropAmount / 50) + ((100 - compression) / 100);
-    
-    const algoRobustness = algorithms.find(a => a.id === algorithm)?.robustness || 1;
-    const survivalChance = Math.max(0, 1 - (damageScore / (algoRobustness * 2)));
-    
-    const survived = Math.random() < survivalChance;
-    setExtractedMessage(survived ? message : '');
-    setStatus('verified');
-    
-    if (survived) {
-      const points = Math.floor(attacksApplied * 10 * algoRobustness);
-      setScore(prev => prev + points);
+
+  const handleExtract = async () => {
+    if (!attackedImage || status !== 'attacking') return;
+
+    setIsLoading(true);
+    setExtractedMessage(null);
+
+    try {
+        // 1. Convert the ATTACKED image from canvas Data URL to raw Base64 string
+        const attackedImageBase64 = attackedImage.split(',')[1];
+
+        // 2. API call to extract watermark
+        const response = await fetch(`${API_BASE_URL}/api/extract`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                image: attackedImageBase64,
+                algorithm: algorithm,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // --- Scoring Simulation (Moved to Frontend for Challenge Mode) ---
+        const damageScore = (Math.abs(brightness) / 100) + (blur / 20) + (noise / 100) + 
+                            (Math.abs(rotation) / 180) + (cropAmount / 50) + ((100 - compression) / 100);
+        
+        const algoRobustness = algorithms.find(a => a.id === algorithm)?.robustness || 1;
+        const survivalChance = Math.max(0, 1 - (damageScore / (algoRobustness * 2)));
+        
+        // The watermark "survives" if a random check passes the calculated survivalChance.
+        const survived = Math.random() < survivalChance;
+        const extractedMsgFinal = survived ? message : data.message || '(Failed extraction)'; 
+        
+        setExtractedMessage(extractedMsgFinal);
+        setStatus('verified'); // Set status to verified
+
+        if (survived) {
+          // Score calculation is based on attacks applied and algorithm robustness
+          const points = Math.floor(attacksApplied * 10 * algoRobustness);
+          setScore(prev => prev + points);
+        }
+
+    } catch (error) {
+        console.error('Extraction failed:', error);
+        setStatus('error');
+        setExtractedMessage('ERROR: Extraction failed due to API error.');
+        alert(`Failed to extract watermark: ${error.message}. Check console for details.`);
+    } finally {
+        setIsLoading(false);
     }
   };
 
@@ -408,12 +506,15 @@ function ChallengeMode() {
             
             <button
               onClick={handleEmbed}
-              disabled={!selectedImage || !message || !algorithm}
+              disabled={!selectedImage || !message || !algorithm || isLoading}
               className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 shadow-lg"
             >
               <Zap className="w-5 h-5" />
-              Embed Watermark
+              {isLoading && status !== 'verified' ? 'Embedding...' : 'Embed Watermark'}
             </button>
+            {status === 'error' && (
+                <p className="text-sm text-red-500 mt-2">An API error occurred. Check console.</p>
+            )}
           </div>
         </div>
 
@@ -430,6 +531,12 @@ function ChallengeMode() {
                     Under Attack
                   </span>
                 )}
+                {status === 'verified' && (
+                  <span className="text-sm text-purple-600 flex items-center gap-1">
+                    <Shield className="w-4 h-4" />
+                    Extraction Complete
+                  </span>
+                )}
               </h2>
               
               <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center border-2 border-purple-300 overflow-hidden">
@@ -444,10 +551,15 @@ function ChallengeMode() {
               <canvas ref={canvasRef} className="hidden" />
               
               <div className="mt-4 flex gap-2">
-                <button className="flex-1 text-sm text-purple-600 hover:text-purple-700 flex items-center justify-center gap-1 py-2 border border-purple-300 rounded hover:bg-purple-50 transition">
+                {/* Note: Download button should use the attackedImage Data URL */}
+                <a 
+                    href={attackedImage} 
+                    download={`attacked-image-${Date.now()}.jpeg`}
+                    className="flex-1 text-sm text-purple-600 hover:text-purple-700 flex items-center justify-center gap-1 py-2 border border-purple-300 rounded hover:bg-purple-50 transition"
+                >
                   <Download className="w-4 h-4" />
-                  Download
-                </button>
+                  Download Attacked Image
+                </a>
                 <button 
                   onClick={resetAttacks}
                   className="flex-1 text-sm text-gray-600 hover:text-gray-700 flex items-center justify-center gap-1 py-2 border border-gray-300 rounded hover:bg-gray-50 transition"
@@ -494,7 +606,7 @@ function ChallengeMode() {
                       </div>
                       <div>
                         <p className="font-medium text-gray-700">Extracted:</p>
-                        <p className="text-gray-900 font-mono text-xs mt-1 break-words">{extractedMessage || '(empty)'}</p>
+                        <p className={`font-mono text-xs mt-1 break-words ${extractedMessage === message ? 'text-green-600' : 'text-red-600'}`}>{extractedMessage || '(empty)'}</p>
                       </div>
                     </div>
                   </div>
@@ -650,10 +762,11 @@ function ChallengeMode() {
               {/* Extract Button */}
               <button
                 onClick={handleExtract}
-                className="w-full mt-6 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white py-4 rounded-lg font-semibold hover:from-cyan-700 hover:to-cyan-800 transition flex items-center justify-center gap-2 shadow-lg"
+                disabled={isLoading || status === 'embedded'}
+                className="w-full mt-6 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white py-4 rounded-lg font-semibold hover:from-cyan-700 hover:to-cyan-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 shadow-lg"
               >
                 <Shield className="w-5 h-5" />
-                Test Watermark Survival
+                {isLoading ? 'Extracting...' : 'Test Watermark Survival'}
               </button>
             </div>
           </div>
