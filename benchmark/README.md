@@ -68,3 +68,14 @@ RAW = raw.RAWatermark(device = device, wm_index = 0)
 wm_image = RAW.encode_img(some_image)
 RAW.detect_img(wm_image, decision_thres=0.5)
 ```
+
+### Include StegaStamp
+
+```python
+from vendor.stegastamp import StegaStampTFWrapper
+model_folder = "vendor/stegastamp/saved_models/stegastamp_pretrained"
+
+stega = StegaStampTFWrapper(model_folder)
+wm_img = stega.encode(img, "Some super secret message")
+msg = stega.decode(wm_img)
+```
