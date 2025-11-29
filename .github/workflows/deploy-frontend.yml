@@ -8,9 +8,9 @@ on:
         required: true
         default: "Manual deployment"
       fargate_ip_endpoint:
-        description: "Live Fargate API Endpoint (e.g., http://3.79.40.136:8000)"
+        description: "Live Fargate API Endpoint (e.g., https://api.waterbench.org"
         required: true
-        default: "http://localhost:8000"
+        default: "https://api.waterbench.org"
 
 jobs:
   deploy:
