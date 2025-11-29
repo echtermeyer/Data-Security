@@ -39,3 +39,12 @@ jobs:
       - name: Deploy to S3 Static Hosting
         run: |
           aws s3 sync watermark-app/dist s3://${{ secrets.AWS_S3_BUCKET }} --delete
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          echo "Invalidating CloudFront Distribution E7RFPKF6E67X1"
+          aws cloudfront create-invalidation \
+            --distribution-id E7RFPKF6E67X1 \
+            --paths "/*"
+        env:
+          CLOUDFRONT_DISTRIBUTION_ID: E7RFPKF6E67X1
