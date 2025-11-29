@@ -1,14 +1,12 @@
 name: Deploy Backend Image to ECR
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'watermark-backend/server.py'
-      - 'watermark-backend/src/**'
-      - 'watermark-backend/requirements.txt'
-      - 'watermark-backend/Dockerfile'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Reason for manual ECR deployment"
+        required: true
+        default: "Manual deployment"
 
 env:
   AWS_REGION: eu-central-1
@@ -38,10 +36,10 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: latest
         run: |
-          # --- CRITICAL CHANGE: Navigate into the backend directory ---
+          # Navigate into the backend directory
           cd watermark-backend/ 
           
-          # 1. Build the Docker image (context is now the current directory)
+          # 1. Build the Docker image
           docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
           
           # 2. Tag the image with the full ECR path
