@@ -1,49 +1,53 @@
-name: Deploy Backend Image to ECR
+name: Deploy Frontend to S3 (watermarking-data-security-lmu)
 
 on:
   workflow_dispatch:
     inputs:
       reason:
-        description: "Reason for manual ECR deployment"
+        description: "Reason for deployment"
         required: true
         default: "Manual deployment"
-
-env:
-  AWS_REGION: eu-central-1
-  ECR_REPOSITORY: watermarking-backend-repo
-  AWS_ACCOUNT_ID: 995423076159
+      fargate_ip_endpoint:
+        description: "Live Fargate API Endpoint (e.g., http://3.79.40.136:8000)"
+        required: true
+        default: "http://localhost:8000"
 
 jobs:
-  build-and-push:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Checkout repository code
         uses: actions/checkout@v4
+
+      - name: Setup Node.js v22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies and build
+        run: |
+          cd watermark-app/
+          npm install
+          # Uses the input parameter to set the VITE environment variable
+          VITE_API_BASE_URL=${{ github.event.inputs.fargate_ip_endpoint }} npm run build
+        env:
+          CI: false
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build, tag, and push Docker image to ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: latest
+      - name: Deploy to S3 Static Hosting
         run: |
-          # Navigate into the backend directory
-          cd watermark-backend/ 
-          
-          # 1. Build the Docker image
-          docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
-          
-          # 2. Tag the image with the full ECR path
-          docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          
-          # 3. Push the image to ECR
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          aws s3 sync watermark-app/dist s3://${{ secrets.AWS_S3_BUCKET }} --delete
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          echo "Invalidating CloudFront Distribution E7RFPKF6E67X1"
+          aws cloudfront create-invalidation \
+            --distribution-id E7RFPKF6E67X1 \
+            --paths "/*"
