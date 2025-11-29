@@ -12,8 +12,8 @@ app = FastAPI(
 origins = [
     "http://localhost:5174",
     "http://127.0.0.1:5174",
-    "https://d352gwnf8fwgii.cloudfront.net",
-    "http://d352gwnf8fwgii.cloudfront.net",
+    "https://waterbench.org",
+    "https://www.waterbench.org",
 ]
 
 app.add_middleware(
