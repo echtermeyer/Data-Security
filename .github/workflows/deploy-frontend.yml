@@ -7,6 +7,10 @@ on:
         description: "Reason for deployment"
         required: true
         default: "Manual deployment"
+      fargate_ip_endpoint:
+        description: "Live Fargate API Endpoint (e.g., http://3.79.40.136:8000)"
+        required: true
+        default: "http://localhost:8000"
 
 jobs:
   deploy:
@@ -25,7 +29,8 @@ jobs:
         run: |
           cd watermark-app/
           npm install
-          npm run build
+          # Uses the input parameter to set the VITE environment variable
+          VITE_API_BASE_URL=${{ github.event.inputs.fargate_ip_endpoint }} npm run build
         env:
           CI: false
 
@@ -39,3 +44,10 @@ jobs:
       - name: Deploy to S3 Static Hosting
         run: |
           aws s3 sync watermark-app/dist s3://${{ secrets.AWS_S3_BUCKET }} --delete
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          echo "Invalidating CloudFront Distribution E7RFPKF6E67X1"
+          aws cloudfront create-invalidation \
+            --distribution-id E7RFPKF6E67X1 \
+            --paths "/*"

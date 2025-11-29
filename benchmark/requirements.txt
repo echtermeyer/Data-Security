@@ -1,0 +1,20 @@
+#torch==2.0.1
+#torchaudio==2.0.2
+#torchvision==0.15.2
+imageio
+jenkspy
+matplotlib
+numpy
+pandas #==1.4.4
+scikit-image
+scikit-learn
+scipy
+tqdm
+opencv-python>=4.1.0.25
+statsmodels
+bchlib>=0.7
+opencv-python>=3.4.3.18
+numpy>=1.16.2
+pillow>=5.4.1
+stn>=1.0.1
+tensorflow

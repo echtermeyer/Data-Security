@@ -1,56 +1,51 @@
 import { Link } from "react-router-dom";
-import {
-  ShieldCheck,
-  Image,
-  Cpu,
-  Layers,
-  Target,
-  FlaskConical,
-  Mail,
-  Github,
-  Linkedin,
-} from "lucide-react";
+import Footer from "../components/Footer";
 
 function Landing() {
   return (
     <div className="bg-gradient-to-b from-slate-50 to-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-cyan-900 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white">
         <div className="absolute inset-0 opacity-10">
           <div className="grid grid-cols-8 gap-2 p-4">
             {[...Array(32)].map((_, i) => (
-              <div key={i} className="aspect-square bg-white/20 rounded"></div>
+              <div
+                key={i}
+                className="aspect-square bg-cyan-400/20 rounded"
+              ></div>
             ))}
           </div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
-            <div className="flex justify-center mb-6">
-              <ShieldCheck className="w-20 h-20 text-cyan-400" />
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-cyan-200">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-blue-400 to-sky-500 bg-clip-text text-transparent pb-2">
               Image Watermarking & Robustness
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
               Safeguarding content authenticity in the era of AI-generated
               images
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4 justify-center mb-6 max-w-fit mx-auto">
               <Link
                 to="/challenge"
-                className="inline-flex items-center gap-2 bg-purple-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-purple-700 transition shadow-lg hover:shadow-xl"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg hover:shadow-cyan-500/50 transform hover:scale-[1.02]"
               >
-                <Target className="w-5 h-5" />
                 Try Challenge Mode
               </Link>
               <Link
                 to="/benchmark"
-                className="inline-flex items-center gap-2 bg-cyan-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-cyan-600 transition shadow-lg hover:shadow-xl"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-sky-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-500 hover:to-sky-500 transition-all shadow-lg hover:shadow-blue-500/50 transform hover:scale-[1.02]"
               >
-                <FlaskConical className="w-5 h-5" />
                 Run Benchmark
               </Link>
+              <a
+                href="#"
+                className="sm:col-span-2 inline-flex items-center justify-center gap-2 bg-white/20 backdrop-blur-md text-white px-8 py-2.5 rounded-xl text-sm font-medium hover:bg-white/30 transition-all border border-cyan-400/30 hover:border-cyan-400/50 shadow-lg"
+              >
+                <span>↓</span>
+                Download Research Paper (PDF)
+              </a>
             </div>
           </div>
         </div>
@@ -60,156 +55,191 @@ function Landing() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-4xl font-bold text-slate-800 mb-6">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-600 bg-clip-text text-transparent mb-6">
               What is Digital Watermarking?
             </h2>
-            <p className="text-lg text-gray-700 mb-4">
+            <p className="text-lg text-slate-700 mb-4">
               Digital watermarking embeds invisible information directly into
               images to verify authenticity, protect copyright, and ensure
               content integrity. As AI-generated images become indistinguishable
               from real photographs, watermarking has emerged as a critical tool
               for content attribution.
             </p>
-            <p className="text-lg text-gray-700 mb-4">
+            <p className="text-lg text-slate-700 mb-4">
               Unlike metadata that can be easily stripped, watermarks are
               embedded within the pixel data itself, making them more resistant
               to tampering and removal.
             </p>
-            <div className="flex gap-4 mt-8">
-              <div className="flex items-center gap-2 text-cyan-600">
-                <ShieldCheck className="w-6 h-6" />
-                <span className="font-semibold">Authenticity</span>
+            <div className="flex flex-wrap gap-4 mt-8">
+              <div className="px-4 py-2 bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200 rounded-lg">
+                <span className="font-semibold text-slate-800">
+                  Authenticity
+                </span>
               </div>
-              <div className="flex items-center gap-2 text-cyan-600">
-                <ShieldCheck className="w-6 h-6" />
-                <span className="font-semibold">Copyright</span>
+              <div className="px-4 py-2 bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-200 rounded-lg">
+                <span className="font-semibold text-slate-800">Copyright</span>
               </div>
-              <div className="flex items-center gap-2 text-cyan-600">
-                <ShieldCheck className="w-6 h-6" />
-                <span className="font-semibold">Integrity</span>
+              <div className="px-4 py-2 bg-gradient-to-r from-sky-50 to-cyan-50 border border-sky-200 rounded-lg">
+                <span className="font-semibold text-slate-800">Integrity</span>
               </div>
             </div>
           </div>
-          <div className="relative">
-            <div className="grid grid-cols-3 gap-4">
-              {[...Array(9)].map((_, i) => (
+          <div className="relative overflow-hidden">
+            <div className="space-y-2">
+              {[...Array(6)].map((_, rowIndex) => (
                 <div
-                  key={i}
-                  className="aspect-square bg-gradient-to-br from-cyan-100 to-slate-200 rounded-lg shadow-md hover:shadow-xl transition transform hover:scale-105"
+                  key={rowIndex}
+                  className="flex gap-2 animate-scroll"
+                  style={{
+                    animation: `scroll-${
+                      rowIndex % 2 === 0 ? "right" : "left"
+                    } ${40 + rowIndex * 5}s linear infinite`,
+                  }}
                 >
-                  <div className="w-full h-full flex items-center justify-center">
-                    <Image className="w-8 h-8 text-slate-400" />
-                  </div>
+                  {[...Array(12)].map((_, colIndex) => (
+                    <div
+                      key={colIndex}
+                      className="aspect-square w-20 flex-shrink-0 rounded-lg shadow-sm hover:shadow-lg transition-all transform hover:scale-110 border border-cyan-200 overflow-hidden bg-slate-100"
+                    >
+                      <img
+                        src={`https://picsum.photos/seed/${
+                          rowIndex * 12 + colIndex + 100
+                        }/80/80`}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                  {/* Duplicate for seamless loop */}
+                  {[...Array(12)].map((_, colIndex) => (
+                    <div
+                      key={`dup-${colIndex}`}
+                      className="aspect-square w-20 flex-shrink-0 rounded-lg shadow-sm hover:shadow-lg transition-all transform hover:scale-110 border border-cyan-200 overflow-hidden bg-slate-100"
+                    >
+                      <img
+                        src={`https://picsum.photos/seed/${
+                          rowIndex * 12 + colIndex + 100
+                        }/80/80`}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
+            <style>{`
+              @keyframes scroll-right {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+              }
+              @keyframes scroll-left {
+                0% { transform: translateX(-50%); }
+                100% { transform: translateX(0); }
+              }
+            `}</style>
           </div>
         </div>
       </section>
 
       {/* Watermarking Categories */}
-      <section className="bg-slate-50 py-20">
+      <section className="bg-gradient-to-br from-slate-50 via-cyan-50/30 to-blue-50/30 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-slate-800 text-center mb-4">
+          <h2 className="text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-600 bg-clip-text text-transparent text-center mb-4">
             Watermarking Techniques
           </h2>
-          <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+          <p className="text-slate-600 text-center mb-12 max-w-2xl mx-auto">
             Different approaches to embedding and protecting watermarks in
             digital images
           </p>
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* LSB */}
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition border-t-4 border-blue-500">
-              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                <Layers className="w-8 h-8 text-blue-600" />
+            <div className="bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all border-2 border-cyan-200 hover:border-cyan-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mb-6 shadow-md">
+                <span className="text-white font-bold text-2xl">LSB</span>
               </div>
-              <h3 className="text-2xl font-bold text-slate-800 mb-4">
-                LSB (Spatial Domain)
+              <h3 className="text-2xl font-bold text-slate-800 mb-2">
+                Spatial Domain
               </h3>
-              <p className="text-gray-700 mb-4">
-                Least Significant Bit techniques modify the lowest bits of pixel
-                values to embed watermark data with minimal visual impact.
+              <p className="text-sm text-slate-500 mb-4">
+                Least Significant Bit
               </p>
-              <ul className="space-y-2 text-gray-600">
+              <p className="text-slate-700 mb-4">
+                Modifies the lowest bits of pixel values to embed watermark data
+                with minimal visual impact.
+              </p>
+              <ul className="space-y-2 text-slate-600 text-sm">
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-1">•</span>
+                  <span className="text-cyan-500 mt-1">•</span>
                   <span>Simple implementation</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-1">•</span>
+                  <span className="text-cyan-500 mt-1">•</span>
                   <span>High capacity</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-1">•</span>
+                  <span className="text-cyan-500 mt-1">•</span>
                   <span>Vulnerable to compression</span>
                 </li>
               </ul>
             </div>
 
             {/* Transform Domain */}
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition border-t-4 border-cyan-500">
-              <div className="w-16 h-16 bg-cyan-100 rounded-lg flex items-center justify-center mb-6">
-                <svg
-                  className="w-8 h-8 text-cyan-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
-                  />
-                </svg>
+            <div className="bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all border-2 border-blue-200 hover:border-blue-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-sky-500 rounded-xl flex items-center justify-center mb-6 shadow-md">
+                <span className="text-white font-bold text-xl">DCT</span>
               </div>
-              <h3 className="text-2xl font-bold text-slate-800 mb-4">
+              <h3 className="text-2xl font-bold text-slate-800 mb-2">
                 Transform Domain
               </h3>
-              <p className="text-gray-700 mb-4">
-                Frequency-based methods (DCT, DWT, FFT) embed watermarks in
-                transform coefficients, offering better robustness to attacks.
+              <p className="text-sm text-slate-500 mb-4">DCT, DWT, FFT</p>
+              <p className="text-slate-700 mb-4">
+                Embeds watermarks in frequency transform coefficients, offering
+                better robustness to attacks.
               </p>
-              <ul className="space-y-2 text-gray-600">
+              <ul className="space-y-2 text-slate-600 text-sm">
                 <li className="flex items-start gap-2">
-                  <span className="text-cyan-500 mt-1">•</span>
+                  <span className="text-blue-500 mt-1">•</span>
                   <span>Robust to compression</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-cyan-500 mt-1">•</span>
+                  <span className="text-blue-500 mt-1">•</span>
                   <span>Resistant to filtering</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-cyan-500 mt-1">•</span>
+                  <span className="text-blue-500 mt-1">•</span>
                   <span>More complex</span>
                 </li>
               </ul>
             </div>
 
             {/* Deep Learning */}
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition border-t-4 border-indigo-500">
-              <div className="w-16 h-16 bg-indigo-100 rounded-lg flex items-center justify-center mb-6">
-                <Cpu className="w-8 h-8 text-indigo-600" />
+            <div className="bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all border-2 border-sky-200 hover:border-sky-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-xl flex items-center justify-center mb-6 shadow-md">
+                <span className="text-white font-bold text-xl">DL</span>
               </div>
-              <h3 className="text-2xl font-bold text-slate-800 mb-4">
+              <h3 className="text-2xl font-bold text-slate-800 mb-2">
                 Deep Learning
               </h3>
-              <p className="text-gray-700 mb-4">
-                Neural network-based approaches learn to embed watermarks that
-                are both imperceptible and highly robust to various attacks.
+              <p className="text-sm text-slate-500 mb-4">Neural Networks</p>
+              <p className="text-slate-700 mb-4">
+                Neural network-based approaches that learn to embed watermarks
+                with superior imperceptibility and robustness.
               </p>
-              <ul className="space-y-2 text-gray-600">
+              <ul className="space-y-2 text-slate-600 text-sm">
                 <li className="flex items-start gap-2">
-                  <span className="text-indigo-500 mt-1">•</span>
+                  <span className="text-sky-500 mt-1">•</span>
                   <span>Adaptive embedding</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-indigo-500 mt-1">•</span>
+                  <span className="text-sky-500 mt-1">•</span>
                   <span>Superior robustness</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-indigo-500 mt-1">•</span>
+                  <span className="text-sky-500 mt-1">•</span>
                   <span>Requires training data</span>
                 </li>
               </ul>
@@ -220,184 +250,81 @@ function Landing() {
 
       {/* Interactive Modes Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h2 className="text-4xl font-bold text-slate-800 text-center mb-12">
+        <h2 className="text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-600 bg-clip-text text-transparent text-center mb-12">
           Explore Watermark Security
         </h2>
 
         <div className="grid md:grid-cols-2 gap-12">
           {/* Challenge Mode */}
-          <div className="relative bg-gradient-to-br from-purple-50 to-purple-100 p-10 rounded-2xl shadow-xl border-2 border-purple-200">
-            <div className="absolute top-4 right-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+          <div className="relative bg-gradient-to-br from-cyan-50 to-blue-50 p-10 rounded-2xl shadow-xl border-2 border-cyan-200 hover:shadow-2xl transition-all">
+            <div className="absolute top-4 right-4 bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
               Featured
             </div>
-            <Target className="w-16 h-16 text-purple-600 mb-6" />
             <h3 className="text-3xl font-bold text-slate-800 mb-4">
               Challenge Mode
             </h3>
-            <p className="text-gray-700 mb-6 text-lg">
+            <p className="text-slate-700 mb-6 text-lg">
               Put watermarks to the test! Upload your image and message, then
               try to destroy the watermark using common image transformations.
               See how robust different techniques really are.
             </p>
-            <ul className="space-y-3 mb-8 text-gray-700">
+            <ul className="space-y-3 mb-8 text-slate-700">
               <li className="flex items-start gap-2">
-                <span className="text-purple-600 text-xl">✓</span>
+                <span className="text-cyan-600 text-xl">✓</span>
                 <span>Interactive attack simulation</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-purple-600 text-xl">✓</span>
+                <span className="text-cyan-600 text-xl">✓</span>
                 <span>Real-time robustness testing</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-purple-600 text-xl">✓</span>
+                <span className="text-cyan-600 text-xl">✓</span>
                 <span>Progressive difficulty levels</span>
               </li>
             </ul>
             <Link
               to="/challenge"
-              className="inline-flex items-center gap-2 bg-purple-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-purple-700 transition shadow-lg hover:shadow-xl w-full justify-center"
+              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg hover:shadow-cyan-500/50 w-full transform hover:scale-[1.02]"
             >
-              <Target className="w-5 h-5" />
               Start Challenge
             </Link>
           </div>
 
           {/* Benchmark Mode */}
-          <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 p-10 rounded-2xl shadow-xl border-2 border-cyan-200">
-            <FlaskConical className="w-16 h-16 text-cyan-600 mb-6" />
+          <div className="bg-gradient-to-br from-blue-50 to-sky-50 p-10 rounded-2xl shadow-xl border-2 border-blue-200 hover:shadow-2xl transition-all">
             <h3 className="text-3xl font-bold text-slate-800 mb-4">
               Benchmark Mode
             </h3>
-            <p className="text-gray-700 mb-6 text-lg">
+            <p className="text-slate-700 mb-6 text-lg">
               Compare watermarking algorithms side-by-side. Analyze
               imperceptibility metrics, embedding efficiency, and extraction
               accuracy across multiple techniques.
             </p>
-            <ul className="space-y-3 mb-8 text-gray-700">
+            <ul className="space-y-3 mb-8 text-slate-700">
               <li className="flex items-start gap-2">
-                <span className="text-cyan-500 text-xl">✓</span>
+                <span className="text-blue-600 text-xl">✓</span>
                 <span>Multi-algorithm comparison</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-cyan-500 text-xl">✓</span>
+                <span className="text-blue-600 text-xl">✓</span>
                 <span>Comprehensive robustness tests</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-cyan-500 text-xl">✓</span>
+                <span className="text-blue-600 text-xl">✓</span>
                 <span>Performance metrics analysis</span>
               </li>
             </ul>
             <Link
               to="/benchmark"
-              className="inline-flex items-center gap-2 bg-cyan-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-cyan-600 transition shadow-lg hover:shadow-xl w-full justify-center"
+              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-sky-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-500 hover:to-sky-500 transition-all shadow-lg hover:shadow-blue-500/50 w-full transform hover:scale-[1.02]"
             >
-              <FlaskConical className="w-5 h-5" />
               Run Benchmark
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Research Paper Section */}
-      <section className="bg-slate-800 text-white py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Research Paper</h2>
-          <p className="text-gray-300 mb-8 text-lg">
-            This project is part of our research on digital watermarking
-            security and robustness. Read our full findings and methodology.
-          </p>
-          <a
-            href="#"
-            className="inline-flex items-center gap-2 bg-white text-slate-800 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition shadow-lg"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-            Download Paper (PDF)
-          </a>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-slate-900 text-gray-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
-            {/* Project Info */}
-            <div>
-              <h3 className="text-white text-lg font-semibold mb-4">
-                About This Project
-              </h3>
-              <p className="text-gray-400 text-sm">
-                Part of the Data Science & Ethics course at
-                Ludwig-Maximilians-Universität München, supervised by Prof. Dr.
-                D. Kranzlmüller, Jan Schmidt, and Fabio Genz.
-              </p>
-            </div>
-
-            {/* Team */}
-            <div>
-              <h3 className="text-white text-lg font-semibold mb-4">
-                Research Team
-              </h3>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2">
-                  <span className="text-cyan-400">•</span>
-                  <span>Fanni Büki</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-cyan-400">•</span>
-                  <span>David B. Hoffmann</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-cyan-400">•</span>
-                  <span>Eric Echtermeyer</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div>
-              <h3 className="text-white text-lg font-semibold mb-4">Contact</h3>
-              <div className="space-y-3">
-                <a
-                  href="mailto:contact@watermark-security.com"
-                  className="flex items-center gap-2 text-sm hover:text-cyan-400 transition"
-                >
-                  <Mail className="w-4 h-4" />
-                  <span>contact@watermark-security.com</span>
-                </a>
-                <a
-                  href="https://github.com"
-                  className="flex items-center gap-2 text-sm hover:text-cyan-400 transition"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Github className="w-4 h-4" />
-                  <span>View on GitHub</span>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-slate-700 pt-8 text-center text-sm text-gray-500">
-            <p>
-              © 2025 Watermark Security Lab - Ludwig-Maximilians-Universität
-              München
-            </p>
-            <p className="mt-2">Munich Network Management Team</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
