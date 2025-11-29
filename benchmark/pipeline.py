@@ -25,32 +25,46 @@ class MethodBase:
         raise NotImplementedError
 
 
+class Method_DWTDCT(MethodBase):
+    def __init__(self):
+        self.enc = WatermarkEncoder()
+        self.bits_len = 8 * len(SECRET_MSG)
+        self.dec = WatermarkDecoder("bytes", self.bits_len)
+        self.scale = [0, 200, 200]
+        self.block = 8
+
+    def encode(self, img_pil, msg):
+        img_bgr = cv2.cvtColor(np.array(img_pil.convert("RGB")), cv2.COLOR_RGB2BGR)
+        self.enc.set_watermark("bytes", msg.encode("utf-8"))
+        wm_bgr = self.enc.encode(img_bgr, "dwtDct", scales=self.scale, block=self.block)
+
+        return Image.fromarray(cv2.cvtColor(wm_bgr, cv2.COLOR_BGR2RGB))
+
+    def decode(self, img_pil):
+        img_bgr = cv2.cvtColor(np.array(img_pil.convert("RGB")), cv2.COLOR_RGB2BGR)
+        wm_bytes = self.dec.decode(
+            img_bgr, "dwtDct", scales=self.scale, block=self.block
+        )
+
+        try:
+            return wm_bytes.decode("utf-8", errors="ignore")
+        except:
+            return wm_bytes
+
+
 class Method_DWTDCTSVD(MethodBase):
     def __init__(self):
         # Encoder/decoder from invisible-watermark (imwatermark)
         self.enc = WatermarkEncoder()
-
-        # Number of bits in the watermark (SECRET_MSG is a global)
-        # 1 char = 8 bits
         self.bits_len = 8 * len(SECRET_MSG)
-
-        # Decoder expects:
-        #   wmType: 'bytes' | 'bits' | 'b16' | 'uuid' | 'ipv4'
-        #   bitsLength: number of bits in the watermark
         self.dec = WatermarkDecoder("bytes", self.bits_len)
 
     def encode(self, img_pil, msg):
         # Convert PIL image (RGB) → NumPy BGR (what OpenCV / imwatermark expects)
         img_rgb = np.array(img_pil.convert("RGB"))
         img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
-
-        # Set watermark payload from the msg argument
         self.enc.set_watermark("bytes", msg.encode("utf-8"))
-
-        # 'dwtDctSvd' is the algorithm / method
         wm_bgr = self.enc.encode(img_bgr, "dwtDctSvd")
-
-        # Convert back BGR → RGB → PIL
         wm_rgb = cv2.cvtColor(wm_bgr, cv2.COLOR_BGR2RGB)
         return Image.fromarray(wm_rgb)
 
@@ -67,7 +81,6 @@ class Method_DWTDCTSVD(MethodBase):
             return wm_bytes.decode("utf-8", errors="ignore")
         except Exception:
             return wm_bytes
-
 
 
 class Method_LSB(MethodBase):
@@ -124,13 +137,15 @@ class Attacker:
 
     # You can leave this here for later, but DON'T use it now
     def attack_regeneration(self, img):
-        raise RuntimeError("Regeneration attack (SDXL) is disabled for this quick test.")
+        raise RuntimeError(
+            "Regeneration attack (SDXL) is disabled for this quick test."
+        )
 
 
 # --- 3. MAIN PIPELINE ---
 
 
-def run_benchmark(n_samples=1):
+def run_benchmark(n_samples=1, attack=True):
     print(f"Loading W-Bench (Subset: {n_samples})...")
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
 
@@ -138,7 +153,7 @@ def run_benchmark(n_samples=1):
 
     methods = {
         "InvisibleWM (DWT-DCT-SVD)": Method_DWTDCTSVD(),
-        # other methods if you add them later
+        "InvisibleWM (DWT-DCT)": Method_DWTDCT(),
     }
 
     results = {m: {"Success": 0, "Total": 0} for m in methods}
@@ -162,11 +177,12 @@ def run_benchmark(n_samples=1):
                 continue
 
             # 2. Attack
-            attacked = attacker.attack_jpeg(watermarked,90)
-            # attacked = watermarked
-
-            # 3. Detect (FIXED: removed duplicate decode)
-            decoded_msg = method.decode(attacked)
+            if attack:
+                attacked = attacker.attack_jpeg(watermarked, 90)
+                decoded_msg = method.decode(attacked)
+            else:
+                decoded_msg = method.decode(watermarked)
+                attacked = None
             if isinstance(decoded_msg, bytes):
                 decoded_msg = decoded_msg.decode("utf-8", errors="ignore")
 
@@ -181,10 +197,16 @@ def run_benchmark(n_samples=1):
                 axes[1].set_title("Watermarked")
                 axes[1].axis("off")
 
-                axes[2].imshow(attacked)
-                axes[2].set_title("Attacked (JPEG 50)")
-                axes[2].axis("off")
+                # FIX: Handle case where attacked is None
+                if attacked is not None:
+                    axes[2].imshow(attacked)
+                    axes[2].set_title("Attacked (JPEG)")
+                else:
+                    # Show watermarked image again or a blank placeholder
+                    axes[2].imshow(watermarked)
+                    axes[2].set_title("No Attack")
 
+                axes[2].axis("off")
                 plt.tight_layout()
                 plt.show()
 
@@ -206,4 +228,4 @@ def run_benchmark(n_samples=1):
 
 
 if __name__ == "__main__":
-    run_benchmark(n_samples=10)
+    run_benchmark(n_samples=3, attack=False)
