@@ -28,3 +28,28 @@ How to use this for the Deep Methods
 | **Deep Learning** | **MBRS** | Mini-Batch of Real & Simulated JPEG | **Compression Robustness SOTA.** Trained specifically to survive heavy JPEG compression and noise attacks. | 🟢 Low-Medium (PyTorch/MPS recommended) | [GitHub (jzyustc/MBRS)](https://github.com/jzyustc/MBRS) |
 | **Deep Learning** | **StegaStamp** | Physical-robust DNN watermark | **Distortion Robustness SOTA.** The gold standard for resistance against physical attacks (print-to-camera, rotation, cropping). | 🟡 Medium (Needs working PyTorch port/MPS) | [PyTorch Port (Example)](https://github.com/conda-inc/StegaStamp-PyTorch) |
 | **Deep Learning** | *(Optional) HiDDeN* | Classic encoder-decoder neural watermark | **Speed/Lightweight Baseline.** The foundational end-to-end neural watermark. Fast inference and a good deep learning lower bound. | 🟢 Low (PyTorch/MPS recommended) | [GitHub (ando-kh/HiDDeN)](https://github.com/ando-kh/HiDDeN) |
+
+### Include MBRS
+
+```python
+# TODO: Fix * imports
+from torch.utils.data import DataLoader
+from utils import *
+from network.Network import *
+
+from utils.load_test_setting import *
+
+device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+
+network = Network(
+    H, W, message_length, noise_layers, device, batch_size, lr, with_diffusion
+)
+EC_path = result_folder + "models/EC_" + str(model_epoch) + ".pth"
+network.load_model_ed(EC_path, device)
+
+encoded_images = network.encoder_decoder.module.encoder(images, messages)
+encoded_images = images + (encoded_images - image) * strength_factor
+noised_images = network.encoder_decoder.module.noise([encoded_images, images])
+
+decoded_messages = network.encoder_decoder.module.decoder(noised_images)
+```
