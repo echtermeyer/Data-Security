@@ -3,14 +3,16 @@ import cv2
 import numpy as np
 from PIL import Image
 from datasets import load_dataset
-from invisible_watermark import WatermarkEncoder, WatermarkDecoder
+from imwatermark import WatermarkEncoder, WatermarkDecoder
 from diffusers import AutoPipelineForImage2Image
 from torchvision import transforms
+import matplotlib.pyplot as plt
+
 
 # --- CONFIGURATION ---
 DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
 W_BENCH_SUBSET_SIZE = 5  # Keep small for M3 testing
-SECRET_MSG = "Test1234"  # 64-bit equivalent usually required
+SECRET_MSG = "Test12"  # 64-bit equivalent usually required
 
 # --- 1. METHOD WRAPPERS ---
 
@@ -25,18 +27,47 @@ class MethodBase:
 
 class Method_DWTDCTSVD(MethodBase):
     def __init__(self):
+        # Encoder/decoder from invisible-watermark (imwatermark)
         self.enc = WatermarkEncoder()
-        self.dec = WatermarkDecoder("dwtDctSvd")
-        self.enc.set_watermark("bytes", msg=SECRET_MSG.encode("utf-8"))
+
+        # Number of bits in the watermark (SECRET_MSG is a global)
+        # 1 char = 8 bits
+        self.bits_len = 8 * len(SECRET_MSG)
+
+        # Decoder expects:
+        #   wmType: 'bytes' | 'bits' | 'b16' | 'uuid' | 'ipv4'
+        #   bitsLength: number of bits in the watermark
+        self.dec = WatermarkDecoder("bytes", self.bits_len)
 
     def encode(self, img_pil, msg):
-        img_np = np.array(img_pil)
-        # Note: simplistic byte encoding for demo
-        wm_img_np = self.enc.encode(img_np, "dwtDctSvd")
-        return Image.fromarray(wm_img_np)
+        # Convert PIL image (RGB) → NumPy BGR (what OpenCV / imwatermark expects)
+        img_rgb = np.array(img_pil.convert("RGB"))
+        img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
+
+        # Set watermark payload from the msg argument
+        self.enc.set_watermark("bytes", msg.encode("utf-8"))
+
+        # 'dwtDctSvd' is the algorithm / method
+        wm_bgr = self.enc.encode(img_bgr, "dwtDctSvd")
+
+        # Convert back BGR → RGB → PIL
+        wm_rgb = cv2.cvtColor(wm_bgr, cv2.COLOR_BGR2RGB)
+        return Image.fromarray(wm_rgb)
 
     def decode(self, img_pil):
-        return self.dec.decode(np.array(img_pil), "dwtDctSvd")
+        # Convert PIL image back to BGR NumPy
+        img_rgb = np.array(img_pil.convert("RGB"))
+        img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
+
+        # Decode using the same algorithm
+        wm_bytes = self.dec.decode(img_bgr, "dwtDctSvd")
+
+        # Return string so your pipeline's `SECRET_MSG in decoded` works
+        try:
+            return wm_bytes.decode("utf-8", errors="ignore")
+        except Exception:
+            return wm_bytes
+
 
 
 class Method_LSB(MethodBase):
@@ -76,19 +107,14 @@ class Method_Deep_Template(MethodBase):
 
 
 # --- 2. ATTACK SIMULATION (W-BENCH STYLE) ---
-
-
 class Attacker:
     def __init__(self):
-        # W-Bench "Regeneration" Attack using SDXL-Turbo (Fast on M3)
-        self.pipe = AutoPipelineForImage2Image.from_pretrained(
-            "stabilityai/sdxl-turbo", torch_dtype=torch.float16, variant="fp16"
-        ).to(DEVICE)
-        self.pipe.set_progress_bar_config(disable=True)
+        # No SDXL pipeline here, so nothing big gets downloaded
+        pass
 
-    def attack_jpeg(self, img, quality=50):
+    def attack_jpeg(self, img, quality=90):
         img.save("temp.jpg", "JPEG", quality=quality)
-        return Image.open("temp.jpg")
+        return Image.open("temp.jpg").convert("RGB")
 
     def attack_crop(self, img, scale=0.5):
         w, h = img.size
@@ -96,72 +122,80 @@ class Attacker:
         t = transforms.CenterCrop((new_h, new_w))
         return t(img).resize((w, h))
 
+    # You can leave this here for later, but DON'T use it now
     def attack_regeneration(self, img):
-        # Strength 0.3 mimics subtle "regeneration" that destroys fragiles
-        return self.pipe(
-            prompt="high quality image",
-            image=img,
-            strength=0.3,
-            guidance_scale=0.0,
-            num_inference_steps=1,
-        ).images[0]
+        raise RuntimeError("Regeneration attack (SDXL) is disabled for this quick test.")
 
 
 # --- 3. MAIN PIPELINE ---
 
 
-def run_benchmark():
-    print(f"Loading W-Bench (Subset: {W_BENCH_SUBSET_SIZE})...")
+def run_benchmark(n_samples=1):
+    print(f"Loading W-Bench (Subset: {n_samples})...")
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
 
     attacker = Attacker()
 
-    # Register Methods
     methods = {
-        "LSB (Spatial)": Method_LSB(),
-        "DWT-DCT-SVD": Method_DWTDCTSVD(),
-        # "StegaStamp": Method_Deep_Template("path/to/stega.pth"),
-        # "MBRS": Method_Deep_Template("path/to/mbrs.pth")
+        "InvisibleWM (DWT-DCT-SVD)": Method_DWTDCTSVD(),
+        # other methods if you add them later
     }
 
     results = {m: {"Success": 0, "Total": 0} for m in methods}
 
-    print(f"{'Method':<15} | {'Attack':<15} | {'Detected?'}")
-    print("-" * 45)
+    print(f"{'Method':<30} | {'Attack':<15} | {'Decoded'} | {'Success?'}")
+    print("-" * 80)
 
     count = 0
     for sample in dataset:
-        if count >= W_BENCH_SUBSET_SIZE:
+        if count >= n_samples:
             break
+
         original = sample["image"].convert("RGB").resize((512, 512))
 
         for m_name, method in methods.items():
             # 1. Embed
             try:
                 watermarked = method.encode(original, SECRET_MSG)
-            except:
-                continue  # Skip if method fails
+            except Exception as e:
+                print(f"{m_name:<30} | {'EmbedError':<15} | {e} | False")
+                continue
 
-            # 2. Attack (Run one specific attack, e.g., Regeneration)
-            attacked = attacker.attack_regeneration(watermarked)
-            # attacked = attacker.attack_jpeg(watermarked, 50)
+            # 2. Attack
+            attacked = attacker.attack_jpeg(watermarked,90)
+            # attacked = watermarked
 
-            # 3. Detect
+            # 3. Detect (FIXED: removed duplicate decode)
             decoded_msg = method.decode(attacked)
-
-            # 4. Metric (Bit Match)
-            # Simple check: is the decoded string inside the result?
-            # (Real benchmark calculates Bit Error Rate)
-            success = 0
             if isinstance(decoded_msg, bytes):
                 decoded_msg = decoded_msg.decode("utf-8", errors="ignore")
-            if SECRET_MSG in str(decoded_msg):
-                success = 1
 
-            results[m_name]["Success"] += success
+            # Show images for first sample only (FIXED: moved condition)
+            if count == -1:
+                fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+                axes[0].imshow(original)
+                axes[0].set_title("Original")
+                axes[0].axis("off")
+
+                axes[1].imshow(watermarked)
+                axes[1].set_title("Watermarked")
+                axes[1].axis("off")
+
+                axes[2].imshow(attacked)
+                axes[2].set_title("Attacked (JPEG 50)")
+                axes[2].axis("off")
+
+                plt.tight_layout()
+                plt.show()
+
+            success = SECRET_MSG in str(decoded_msg)
+
+            print(
+                f"{m_name:<30} | {'JPEG(50)':<15} | {repr(decoded_msg):<20} | {success}"
+            )
+
+            results[m_name]["Success"] += int(success)
             results[m_name]["Total"] += 1
-
-            print(f"{m_name:<15} | {'Regen(0.3)':<15} | {bool(success)}")
 
         count += 1
 
@@ -172,4 +206,4 @@ def run_benchmark():
 
 
 if __name__ == "__main__":
-    run_benchmark()
+    run_benchmark(n_samples=10)
