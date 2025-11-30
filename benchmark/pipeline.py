@@ -156,7 +156,7 @@ def run_config(
 
 def run_benchmark():
     DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
-    W_BENCH_SUBSET_SIZE = 1
+    W_BENCH_SUBSET_SIZE = 100
 
     loss_fn_alex = lpips.LPIPS(net="alex").to(DEVICE)
 
@@ -164,58 +164,58 @@ def run_benchmark():
 
     attacks = [
         ("attack_brightness", {"factor": 0.5}),
-        # ("attack_brightness", {"factor": 0.7}),
-        # ("attack_brightness", {"factor": 0.9}),
-        # ("attack_brightness", {"factor": 1.1}),
-        # ("attack_brightness", {"factor": 1.3}),
-        # ("attack_brightness", {"factor": 1.5}),
-        # ("attack_brightness", {"factor": 2.0}),
-        # # --- Distortion Attacks (Contrast) ---
-        # ("attack_contrast", {"factor": 0.5}),
-        # ("attack_contrast", {"factor": 0.8}),
-        # ("attack_contrast", {"factor": 1.2}),
-        # ("attack_contrast", {"factor": 1.5}),
-        # ("attack_contrast", {"factor": 2.0}),
-        # # --- Distortion Attacks (Blur - Kernel Size) ---
-        # ("attack_blur", {"kernel_size": 1}),
-        # ("attack_blur", {"kernel_size": 3}),
-        # ("attack_blur", {"kernel_size": 5}),
-        # ("attack_blur", {"kernel_size": 7}),
-        # ("attack_blur", {"kernel_size": 9}),
-        # # --- Distortion Attacks (Noise - Standard Deviation) ---
-        # ("attack_noise", {"std": 0.01}),
-        # ("attack_noise", {"std": 0.03}),
-        # ("attack_noise", {"std": 0.05}),
-        # ("attack_noise", {"std": 0.08}),
-        # ("attack_noise", {"std": 0.1}),
-        # # --- Distortion Attacks (JPEG Quality) ---
-        # ("attack_jpeg", {"quality": 90}),
-        # ("attack_jpeg", {"quality": 80}),
-        # ("attack_jpeg", {"quality": 70}),
-        # ("attack_jpeg", {"quality": 60}),
-        # ("attack_jpeg", {"quality": 50}),
-        # ("attack_jpeg", {"quality": 40}),
-        # ("attack_jpeg", {"quality": 30}),
-        # ("attack_jpeg", {"quality": 20}),
-        # ("attack_jpeg", {"quality": 10}),
-        # # --- Geometric Attacks (Rotate) ---
-        # ("attack_rotate", {"degree": 5}),
-        # ("attack_rotate", {"degree": 10}),
-        # ("attack_rotate", {"degree": 15}),
-        # ("attack_rotate", {"degree": 30}),
-        # ("attack_rotate", {"degree": 45}),
-        # ("attack_rotate", {"degree": 90}),
-        # # --- Geometric Attacks (Scale) ---
-        # ("attack_scale", {"scale": 0.9}),
-        # ("attack_scale", {"scale": 0.75}),
-        # ("attack_scale", {"scale": 0.5}),
-        # ("attack_scale", {"scale": 0.25}),
-        # # --- Geometric Attacks (Crop - Fraction Kept) ---
-        # ("attack_crop", {"crop_size": 0.9}),
-        # ("attack_crop", {"crop_size": 0.8}),
-        # ("attack_crop", {"crop_size": 0.6}),
-        # ("attack_crop", {"crop_size": 0.4}),
-        # ("attack_crop", {"crop_size": 0.2}),
+        ("attack_brightness", {"factor": 0.7}),
+        ("attack_brightness", {"factor": 0.9}),
+        ("attack_brightness", {"factor": 1.1}),
+        ("attack_brightness", {"factor": 1.3}),
+        ("attack_brightness", {"factor": 1.5}),
+        ("attack_brightness", {"factor": 2.0}),
+        # --- Distortion Attacks (Contrast) ---
+        ("attack_contrast", {"factor": 0.5}),
+        ("attack_contrast", {"factor": 0.8}),
+        ("attack_contrast", {"factor": 1.2}),
+        ("attack_contrast", {"factor": 1.5}),
+        ("attack_contrast", {"factor": 2.0}),
+        # --- Distortion Attacks (Blur - Kernel Size) ---
+        ("attack_blur", {"kernel_size": 1}),
+        ("attack_blur", {"kernel_size": 3}),
+        ("attack_blur", {"kernel_size": 5}),
+        ("attack_blur", {"kernel_size": 7}),
+        ("attack_blur", {"kernel_size": 9}),
+        # --- Distortion Attacks (Noise - Standard Deviation) ---
+        ("attack_noise", {"std": 0.01}),
+        ("attack_noise", {"std": 0.03}),
+        ("attack_noise", {"std": 0.05}),
+        ("attack_noise", {"std": 0.08}),
+        ("attack_noise", {"std": 0.1}),
+        # --- Distortion Attacks (JPEG Quality) ---
+        ("attack_jpeg", {"quality": 90}),
+        ("attack_jpeg", {"quality": 80}),
+        ("attack_jpeg", {"quality": 70}),
+        ("attack_jpeg", {"quality": 60}),
+        ("attack_jpeg", {"quality": 50}),
+        ("attack_jpeg", {"quality": 40}),
+        ("attack_jpeg", {"quality": 30}),
+        ("attack_jpeg", {"quality": 20}),
+        ("attack_jpeg", {"quality": 10}),
+        # --- Geometric Attacks (Rotate) ---
+        ("attack_rotate", {"degree": 5}),
+        ("attack_rotate", {"degree": 10}),
+        ("attack_rotate", {"degree": 15}),
+        ("attack_rotate", {"degree": 30}),
+        ("attack_rotate", {"degree": 45}),
+        ("attack_rotate", {"degree": 90}),
+        # --- Geometric Attacks (Scale) ---
+        ("attack_scale", {"scale": 0.9}),
+        ("attack_scale", {"scale": 0.75}),
+        ("attack_scale", {"scale": 0.5}),
+        ("attack_scale", {"scale": 0.25}),
+        # --- Geometric Attacks (Crop - Fraction Kept) ---
+        ("attack_crop", {"crop_size": 0.9}),
+        ("attack_crop", {"crop_size": 0.8}),
+        ("attack_crop", {"crop_size": 0.6}),
+        ("attack_crop", {"crop_size": 0.4}),
+        ("attack_crop", {"crop_size": 0.2}),
         # --- Regeneration Attacks (Diffusion - Noise Step) ---
         # ("attack_diffusion", {"noise_step": 20, "prompt": ""}),
         # ("attack_diffusion", {"noise_step": 40, "prompt": ""}),
@@ -263,10 +263,10 @@ def run_benchmark():
     ]
     messages = [
         "Hi",  # len 2
-        # "Carl",  # len 4
-        # "Tubingen",  # len 8
-        # "CanYouSeeMeHere",  # len 16
-        # "HowCoolIsWaterBench?LikeyCooool!",  # len 32
+        "Carl",  # len 4
+        "Tubingen",  # len 8
+        "CanYouSeeMeHere",  # len 16
+        "HowCoolIsWaterBench?LikeyCooool!",  # len 32
     ]
     results = []
     for msg in messages:
