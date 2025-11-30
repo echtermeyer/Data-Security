@@ -1,9 +1,6 @@
 import torch
 from PIL import Image
 from datasets import load_dataset
-from diffusers import AutoPipelineForImage2Image
-from torchvision import transforms
-import matplotlib.pyplot as plt
 from difflib import SequenceMatcher
 import json
 import time
@@ -37,8 +34,8 @@ def run_config(
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
 
     # m_name, method = "InvisibleWM (DWT-DCT-SVD)", Method_DWTDCTSVD(msg)
-    # m_name, method = "InvisibleWM (DWT-DCT)", Method_DWTDCT(msg)
-    m_name, method = "LSB", Method_LSB()
+    m_name, method = "InvisibleWM (DWT-DCT)", Method_DWTDCT(msg)
+    # m_name, method = "LSB", Method_LSB()
     # m_name, method = "LSB Robust", Method_LSB_Robust()
     # m_name, method = "MBRS", Method_MBRS(device)
     # m_name, method = "RAW", Method_RAW()
@@ -152,13 +149,14 @@ def run_config(
         "avg_lpips_val_scores": float(np.mean(lpips_val_scores_np)),
         "std_lpips_val_scores": float(np.std(lpips_val_scores_np)),
         "time_per_image_sec": elapsed_time / count,
+        "m_name": m_name,
     }
     return final_results
 
 
 def run_benchmark():
     DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
-    W_BENCH_SUBSET_SIZE = 5
+    W_BENCH_SUBSET_SIZE = 1
 
     loss_fn_alex = lpips.LPIPS(net="alex").to(DEVICE)
 
@@ -291,7 +289,7 @@ def run_benchmark():
                 }
             )
 
-    with open("lbs_benchmark_results.json", "w") as f:
+    with open(f"{results[0]['result']['m_name']}_benchmark_results.json", "w") as f:
         json.dump(results, f, indent=4)
     print("Benchmark results saved to benchmark_results.json")
 

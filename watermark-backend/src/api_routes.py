@@ -1,6 +1,11 @@
 from fastapi import APIRouter, HTTPException
 from typing import Dict, Any
 from datetime import datetime
+from io import BytesIO
+import base64
+import torch
+from PIL import Image
+
 
 from .schemas import (
     EmbedRequest,
@@ -31,6 +36,13 @@ from .watermark_utils import (
 
 from .crypto_utils import verify_signature
 
+
+from .vendor.lsb import Method_LSB
+from .vendor.dwtdct import Method_DWTDCT
+from .vendor.mbrs import Method_MBRS
+from .vendor.vine import Method_VINE
+
+
 user_registry: Dict[str, Dict[str, str]] = {}
 
 
@@ -38,18 +50,30 @@ MOCK_BENCHMARK_RESULTS: Dict[WatermarkAlgorithm, AlgorithmMetrics] = {
     "lsb": AlgorithmMetrics(
         embed_time=0.023, extract_time=0.018, psnr=42.3, ssim=0.991
     ),
-    "dct": AlgorithmMetrics(
+    "dctdwt": AlgorithmMetrics(
         embed_time=0.156, extract_time=0.142, psnr=38.7, ssim=0.967
     ),
-    "dwt": AlgorithmMetrics(
+    "mbrs": AlgorithmMetrics(
         embed_time=0.189, extract_time=0.171, psnr=40.1, ssim=0.978
     ),
-    "deep": AlgorithmMetrics(
+    "vine": AlgorithmMetrics(
         embed_time=0.842, extract_time=0.731, psnr=44.8, ssim=0.995
     ),
 }
 
 api_router = APIRouter(prefix="/api", tags=["Watermark"])
+
+
+def base64_pil(img_b64):
+    img_data = base64.b64decode(img_b64)
+    img = Image.open(BytesIO(img_data))
+    return img
+
+
+def pil_to_base64(img_pil):
+    buffer = BytesIO()
+    img_pil.save(buffer, format="PNG")
+    return base64.b64encode(buffer.getvalue()).decode("utf-8")
 
 
 @api_router.post(
@@ -58,10 +82,24 @@ api_router = APIRouter(prefix="/api", tags=["Watermark"])
 async def embed_watermark_endpoint(request: EmbedRequest):
     try:
         print(f"Embedding '{request.message[:20]}...' using {request.algorithm}...")
+        device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+        pil_img = base64_pil(request.image)
+        if request.algorithm == "lsb":
+            Lsb = Method_LSB()
+            wm_image = Lsb.encode(pil_img, request.message)
+        elif request.algorithm == "dctdwt":
+            DwtDct = Method_DWTDCT(request.message)
+            wm_image = DwtDct.encode(pil_img, request.message)
+        elif request.algorithm == "mbrs":
+            Mbrs = Method_MBRS(device)
+            wm_image = Mbrs.encode(pil_img, request.message)
+        elif request.algorithm == "vine":
+            Vine = Method_VINE(device)
+            wm_image = Vine.encode(pil_img, request.message)
+        else:
+            raise HTTPException(status_code=400, detail="Unsupported algorithm")
 
-        watermarked_image_b64 = request.image
-
-        return EmbedResponse(watermarked_image=watermarked_image_b64)
+        return EmbedResponse(watermarked_image=pil_to_base64(wm_image))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Watermark embedding failed: {e}")
 
@@ -75,10 +113,29 @@ async def extract_watermark_endpoint(request: ExtractRequest):
     try:
         print(f"Extracting watermark using {request.algorithm}...")
 
-        message = f"Extracted successfully by {request.algorithm} algorithm."
-        success = True
+        # message = f"Extracted successfully by {request.algorithm} algorithm."
+        # success = True
 
-        return ExtractResponse(message=message, success=success)
+        device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+        pil_img = base64_pil(request.image)
+        success = True
+        if request.algorithm == "lsb":
+            Lsb = Method_LSB()
+            msg = Lsb.decode(pil_img)
+        elif request.algorithm == "dctdwt":
+            DwtDct = Method_DWTDCT(request.message)
+            msg = DwtDct.decode(pil_img)
+        elif request.algorithm == "mbrs":
+            Mbrs = Method_MBRS(device)
+            msg = Mbrs.decode(pil_img)
+        elif request.algorithm == "vine":
+            Vine = Method_VINE(device)
+            msg = Vine.decode(pil_img)
+        else:
+            success = False
+            msg = "Unsupported algorithm"
+
+        return ExtractResponse(message=msg, success=success)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Watermark extraction failed: {e}")
 
@@ -241,7 +298,7 @@ async def verify_ownership(request: VerifyOwnershipRequest):
                 verification=None,
                 author_details=None,
             )
-        
+
         extracted_claim = AuthorshipClaim(**claim_dict)
 
         user_id = extracted_claim.user_id
