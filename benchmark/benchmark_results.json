@@ -1,0 +1,23 @@
+[
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 90
+                }
+            ]
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.053793103448275856
+        }
+    },
+    {
+        "attacks": [],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.6137931034482759
+        }
+    }
+]
