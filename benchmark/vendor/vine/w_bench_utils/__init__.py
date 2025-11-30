@@ -24,7 +24,7 @@ class Attacker:
     Provides methods for various attack types on watermarked images.
     """
 
-    def __init__(self, device: str = "cuda"):
+    def __init__(self, device: str = "mps"):
         """
         Initialize the Attacker.
 
@@ -161,36 +161,68 @@ class Attacker:
         """
         return image.rotate(degree)
 
-    def attack_scale(self, image: Image.Image, scale: float = 0.5) -> Image.Image:
+    def attack_scale(
+        self, image: Image.Image, scale: float = 0.5, min_size: int = 256
+    ) -> Image.Image:
         """
-        Scale image.
+        Scale image down and then back up to original size.
+        This simulates a lossy scaling attack while maintaining decodable size.
 
         Args:
             image: Input PIL Image
             scale: Scaling factor (e.g., 0.5 for half size)
+            min_size: Minimum dimension to maintain (default 256 for watermark decoding)
 
         Returns:
-            Scaled PIL Image
+            Scaled PIL Image (resized back to original dimensions)
         """
-        w, h = image.size
-        new_size = (int(w * scale), int(h * scale))
-        return image.resize(new_size, Image.Resampling.LANCZOS)
+        original_size = image.size
+        w, h = original_size
 
-    def attack_crop(self, image: Image.Image, crop_size: float = 0.5) -> Image.Image:
+        # Scale down
+        scaled_w = max(int(w * scale), min_size)
+        scaled_h = max(int(h * scale), min_size)
+        scaled_image = image.resize((scaled_w, scaled_h), Image.Resampling.LANCZOS)
+
+        # Scale back up to original size (lossy operation)
+        return scaled_image.resize(original_size, Image.Resampling.LANCZOS)
+
+    def attack_crop(
+        self, image: Image.Image, crop_size: float = 0.5, min_size: int = 256
+    ) -> Image.Image:
         """
-        Crop image to specified fraction.
+        Crop image to specified fraction and resize back to original size.
+        This simulates a cropping attack while maintaining decodable size.
 
         Args:
             image: Input PIL Image
-            crop_size: Fraction of image to keep (0.0-1.0)
+            crop_size: Fraction to crop from each edge (0.0-1.0).
+                      E.g., 0.5 crops 50% from left/top edges.
+            min_size: Minimum dimension to maintain (default 256 for watermark decoding)
 
         Returns:
-            Cropped PIL Image
+            Cropped and resized PIL Image (back to original dimensions)
         """
-        w, h = image.size
+        original_size = image.size
+        w, h = original_size
+
+        # Calculate crop box (remove crop_size fraction from left and top)
         left = int(w * crop_size)
         top = int(h * crop_size)
-        return image.crop((left, top, w, h))
+
+        # Ensure cropped region is at least min_size
+        crop_w = w - left
+        crop_h = h - top
+
+        if crop_w < min_size or crop_h < min_size:
+            # Adjust crop to maintain minimum size
+            left = max(0, w - min_size)
+            top = max(0, h - min_size)
+
+        cropped_image = image.crop((left, top, w, h))
+
+        # Resize back to original size (lossy operation that removes cropped content)
+        return cropped_image.resize(original_size, Image.Resampling.LANCZOS)
 
     # ==================== Regeneration Attacks ====================
 
@@ -220,7 +252,7 @@ class Attacker:
         """
         if "diffusion_pipe" not in self._models_loaded:
             try:
-                from vine.w_bench_utils.regeneration.utils_sto_regeneration import (
+                from vendor.vine.w_bench_utils.regeneration.utils_sto_regeneration import (
                     ReSDPipeline,
                 )
                 from diffusers import DDIMScheduler

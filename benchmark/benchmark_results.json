@@ -1,23 +1,86 @@
 [
     {
         "attacks": [
-            [
-                "attack_jpeg",
-                {
-                    "quality": 90
-                }
-            ]
+            "attack_diffusion",
+            {
+                "noise_step": 20,
+                "prompt": ""
+            }
         ],
         "message": "CanYouSeeMeHere",
         "results": {
-            "InvisibleWM (DWT-DCT)": 0.053793103448275856
+            "avg_match_rate": 0.07445887445887447,
+            "std_match_rate": 0.037279740504954084,
+            "time_per_image_sec": 15.289880341594108
         }
     },
     {
-        "attacks": [],
+        "attacks": [
+            "attack_diffusion",
+            {
+                "noise_step": 40,
+                "prompt": ""
+            }
+        ],
         "message": "CanYouSeeMeHere",
         "results": {
-            "InvisibleWM (DWT-DCT)": 0.6137931034482759
+            "avg_match_rate": 0.07488285932221858,
+            "std_match_rate": 0.06687175903932593,
+            "time_per_image_sec": 11.410461174999364
+        }
+    },
+    {
+        "attacks": [
+            "attack_diffusion",
+            {
+                "noise_step": 60,
+                "prompt": ""
+            }
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "avg_match_rate": 0.017391304347826087,
+            "std_match_rate": 0.034782608695652174,
+            "time_per_image_sec": 11.807014575006907
+        }
+    },
+    {
+        "attacks": [
+            "attack_diffusion",
+            {
+                "noise_step": 80,
+                "prompt": ""
+            }
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "avg_match_rate": 0.04834368530020704,
+            "std_match_rate": 0.03980543277421203,
+            "time_per_image_sec": 13.084049083397257
+        }
+    },
+    {
+        "attacks": [
+            "attack_diffusion",
+            {
+                "noise_step": 100,
+                "prompt": ""
+            }
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "avg_match_rate": 0.05236363636363637,
+            "std_match_rate": 0.07176085168607424,
+            "time_per_image_sec": 15.075433016603347
+        }
+    },
+    {
+        "attacks": null,
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "avg_match_rate": 1.0,
+            "std_match_rate": 0.0,
+            "time_per_image_sec": 0.29741609160555527
         }
     }
 ]
