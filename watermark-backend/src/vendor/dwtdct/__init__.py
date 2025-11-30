@@ -1,4 +1,4 @@
-from vendor import MethodBase
+from src.vendor import MethodBase
 from imwatermark import WatermarkEncoder, WatermarkDecoder
 import cv2
 from PIL import Image

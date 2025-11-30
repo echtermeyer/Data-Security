@@ -1,6 +1,6 @@
-from vendor import MethodBase
-from vendor.vine.src.vine_turbo import VINE_Turbo
-from vendor.vine.src.stega_encoder_decoder import CustomConvNeXt
+from src.vendor import MethodBase
+from src.vendor.vine.src.vine_turbo import VINE_Turbo
+from src.vendor.vine.src.stega_encoder_decoder import CustomConvNeXt
 from torchvision import transforms
 from torchvision.transforms.functional import to_tensor, to_pil_image
 import torch
