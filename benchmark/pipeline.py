@@ -10,7 +10,7 @@ import time
 import numpy as np
 import cv2
 import lpips
-
+from rapidfuzz import fuzz
 
 from vendor.mbrs import Method_MBRS
 from vendor.raw import Method_RAW
@@ -26,45 +26,29 @@ from vendor.vine.src.quality_metrics_wbench import (
 from vendor.vine.w_bench_utils import Attacker
 
 
-# class Attacker:
-#     def __init__(self):
-#         # No SDXL pipeline here, so nothing big gets downloaded
-#         pass
-
-#     def attack_jpeg(self, img, quality=50):
-#         img.save("temp.jpg", "JPEG", quality=quality)
-#         return Image.open("temp.jpg").convert("RGB")
-
-#     def attack_crop(self, img, scale=0.5):
-#         w, h = img.size
-#         new_w, new_h = int(w * scale), int(h * scale)
-#         t = transforms.CenterCrop((new_h, new_w))
-#         return t(img).resize((w, h))
-
-#     # You can leave this here for later, but DON'T use it now
-#     def attack_regeneration(self, img):
-#         raise RuntimeError(
-#             "Regeneration attack (SDXL) is disabled for this quick test."
-#         )
-
-
 def run_config(n_samples, msg, attack: tuple, device: str, loss_fn_alex):
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
 
-    m_name, method = "InvisibleWM (DWT-DCT-SVD)", Method_DWTDCTSVD(msg)
+    # m_name, method = "InvisibleWM (DWT-DCT-SVD)", Method_DWTDCTSVD(msg)
     # m_name, method = "InvisibleWM (DWT-DCT)", Method_DWTDCT(msg)
-    # m_name, method = "LSB", Method_LSB()
+    m_name, method = "LSB", Method_LSB()
     # m_name, method = "LSB Robust", Method_LSB_Robust()
     # m_name, method = "MBRS", Method_MBRS(device)
     # m_name, method = "RAW", Method_RAW()
     # m_name, method = "MVINEBRS", Method_VINE(device)
 
-    print(f"{'Method':<30} | {'Attack':<15} | {'Decoded'} | {'Success?'}")
-    print("-" * 80)
+    # print(f"{'Method':<30} | {'Attack':<15} | {'Decoded'} | {'Success?'}")
+    # print("-" * 80)
     start_time = time.perf_counter()
     count = 0
 
-    score = list()
+    ratcliff_obershelp_scores = list()
+    lambdaevenshtein_scores = list()
+    jaccard_scores = list()
+    acc_scores = list()
+    psnr_val_scores = list()
+    ssim_val_scores = list()
+    lpips_val_scores = list()
     for sample in dataset:
         if count >= n_samples:
             break
@@ -82,7 +66,7 @@ def run_config(n_samples, msg, attack: tuple, device: str, loss_fn_alex):
             attacked_img = getattr(attacker, attack[0])(attacked_img, **attack[1])
         try:
             # original & attacked are PIL RGB → convert to BGR NumPy arrays
-            decoded_cv = cv2.cvtColor(np.array(attacked), cv2.COLOR_RGB2BGR)
+            decoded_cv = cv2.cvtColor(np.array(attacked_img), cv2.COLOR_RGB2BGR)
             original_cv = cv2.cvtColor(np.array(original), cv2.COLOR_RGB2BGR)
 
             psnr_val, ssim_val = compute_psnr_ssim(decoded_cv, original_cv)
@@ -97,24 +81,71 @@ def run_config(n_samples, msg, attack: tuple, device: str, loss_fn_alex):
 
         # TODO: get success rate (e.g. fuzzy matching)
         if isinstance(decoded_msg, str):
-            match_rate = SequenceMatcher(None, msg, decoded_msg).ratio()
+            ratcliff_obershelp_match = SequenceMatcher(None, msg, decoded_msg).ratio()
+            lambdaevenshtein_match = fuzz.ratio("mysfits", "misfits")
+            a, b = set(msg), set(decoded_msg)
+            jaccard_match = float(len(a.intersection(b))) / len(a.union(b))
+            ratcliff_obershelp_scores.append(ratcliff_obershelp_match)
+            lambdaevenshtein_scores.append(lambdaevenshtein_match)
+            jaccard_scores.append(jaccard_match)
         else:  # in case of non-str return
-            match_rate = decoded_msg
-        print(
-            f"{m_name:<30} | {str(attacks):<15} | {repr(match_rate):<20}",
-            f"| PSNR={psnr_val:.2f} SSIM={ssim_val:.4f} LPIPS={lpips_val:.4f}",
-        )
+            acc = decoded_msg
+            acc_scores.append(acc)
+        # print(
+        #     f"{m_name:<30} | {str(attack):<15} | {repr(match_rate):<20}",
+        #     f"| PSNR={psnr_val:.2f} SSIM={ssim_val:.4f} LPIPS={lpips_val:.4f}",
+        # )
 
-        score.append(match_rate)
+        psnr_val_scores.append(psnr_val)
+        ssim_val_scores.append(ssim_val)
+        lpips_val_scores.append(lpips_val)
 
         count += 1
     end_time = time.perf_counter()
     elapsed_time = end_time - start_time
-    np_res = np.array(score)
+    if ratcliff_obershelp_scores:
+        ratcliff_obershelp_scores_np = np.array(ratcliff_obershelp_scores)
+        lambdaevenshtein_scores_np = np.array(lambdaevenshtein_scores)
+        jaccard_scores_np = np.array(jaccard_scores)
+        acc_scores_np = None
+        avg_ratcliff_obershelp_scores = float(np.mean(ratcliff_obershelp_scores_np))
+        std_ratcliff_obershelp_scores = float(np.std(ratcliff_obershelp_scores_np))
+        avg_lambdaevenshtein_scores = float(np.mean(lambdaevenshtein_scores_np))
+        std_lambdaevenshtein_scores = float(np.std(lambdaevenshtein_scores_np))
+        avg_jaccard_scores = float(np.mean(jaccard_scores_np))
+        std_jaccard_scores = float(np.std(jaccard_scores_np))
+        avg_acc_scores = None
+        std_acc_scores = None
+    else:
+        acc_scores_np = np.array(acc_scores)
+        avg_ratcliff_obershelp_scores = None
+        std_ratcliff_obershelp_scores = None
+        avg_lambdaevenshtein_scores = None
+        std_lambdaevenshtein_scores = None
+        avg_jaccard_scores = None
+        std_jaccard_scores = None
+        avg_acc_scores = float(np.mean(acc_scores_np))
+        std_acc_scores = float(np.std(acc_scores_np))
+
+    psnr_val_scores_np = np.array(psnr_val_scores)
+    ssim_val_scores_np = np.array(ssim_val_scores)
+    lpips_val_scores_np = np.array(lpips_val_scores)
     final_results = {
-        "avg_match_rate": float(np.mean(np_res)),
-        "std_match_rate": float(np.std(np_res)),
-        "time_per_image_sec": elapsed_time / len(score),
+        "avg_ratcliff_obershelp_scores": avg_ratcliff_obershelp_scores,
+        "std_ratcliff_obershelp_scores": std_ratcliff_obershelp_scores,
+        "avg_lambdaevenshtein_scores": avg_lambdaevenshtein_scores,
+        "std_lambdaevenshtein_scores": std_lambdaevenshtein_scores,
+        "avg_jaccard_scores": avg_jaccard_scores,
+        "std_jaccard_scores": std_jaccard_scores,
+        "avg_acc_scores": avg_acc_scores,
+        "std_acc_scores": std_acc_scores,
+        "psnr_val_scores_scores": float(np.mean(psnr_val_scores_np)),
+        "psnr_val_scores_scores": float(np.std(psnr_val_scores_np)),
+        "avg_ssim_val_scores": float(np.mean(ssim_val_scores_np)),
+        "std_ssim_val_scores": float(np.std(ssim_val_scores_np)),
+        "avg_lpips_val_scores": float(np.mean(lpips_val_scores_np)),
+        "std_lpips_val_scores": float(np.std(lpips_val_scores_np)),
+        "time_per_image_sec": elapsed_time / count,
     }
     return final_results
 
@@ -227,12 +258,13 @@ def run_benchmark():
         None,
     ]
     messages = [
-        # "Hi",  # len 2
-        # "Carl",  # len 4
-        # "Tubingen",  # len 8
+        "Hi",  # len 2
+        "Carl",  # len 4
+        "Tubingen",  # len 8
         "CanYouSeeMeHere",  # len 16
+        "HowCoolIsWaterBench?LikeyCooool!",  # len 32
     ]
-    restults = []
+    results = []
     for msg in messages:
         print(f"\n=== Benchmarking with message: '{msg}' ===\n")
         for attack in attacks:
@@ -240,22 +272,20 @@ def run_benchmark():
             result = run_config(
                 n_samples=W_BENCH_SUBSET_SIZE,
                 msg=msg,
-                attacks=attack,
+                attack=attack,
                 device=DEVICE,
                 loss_fn_alex=loss_fn_alex,
             )
-            restults.append(
+            results.append(
                 {
                     "attacks": attack,
                     "message": msg,
                     "results": result,
-                    "device": DEVICE,
-                    "loss_fn_alex": loss_fn_alex,
                 }
             )
 
-    with open("benchmark_results.json", "w") as f:
-        json.dump(restults, f, indent=4)
+    with open("lbs_benchmark_results.json", "w") as f:
+        json.dump(results, f, indent=4)
     print("Benchmark results saved to benchmark_results.json")
 
 
