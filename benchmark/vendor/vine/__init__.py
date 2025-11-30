@@ -10,7 +10,7 @@ import numpy as np
 class Method_VINE(MethodBase):
     def __init__(self, device):
         self.device = device
-        self.watermark_encoder = VINE_Turbo.from_pretrained("Shilin-LU/VINE-R-Enc")
+        self.watermark_encoder = VINE_Turbo.from_pretrained("Shilin-LU/VINE-R-Enc", device=device)
         self.watermark_encoder.to(device)
         self.watermark_decoder = CustomConvNeXt.from_pretrained("Shilin-LU/VINE-R-Dec")
         self.watermark_decoder.to(device)
@@ -68,7 +68,12 @@ class Method_VINE(MethodBase):
         watermark = watermark.to(self.device)
 
         ### ============= watermark encoding =============
-        encoded_image_256 = self.watermark_encoder(resized_img, watermark)
+        encoded_image_256 = self.watermark_encoder(resized_img, secret=watermark)
+        if encoded_image_256 is None:
+            raise RuntimeError("VINE_Turbo.forward returned None")
+
+        print("encoded_image_256:", type(encoded_image_256))
+        print("resized_img:", type(resized_img))
 
         ### ============= resolution scaling to original size =============
         residual_256 = encoded_image_256 - resized_img  # 256x256

@@ -235,9 +235,9 @@ def test01():
     # conv1x1 vs linear
     from sgm.util import count_params
 
-    conv = torch.nn.Conv2d(3, 32, kernel_size=1).cuda()
+    conv = torch.nn.Conv2d(3, 32, kernel_size=1).to(self.device)
     print(count_params(conv))
-    linear = torch.nn.Linear(3, 32).cuda()
+    linear = torch.nn.Linear(3, 32).to(self.device)
     print(count_params(linear))
 
     print(conv.weight.shape)
@@ -248,7 +248,7 @@ def test01():
 
     print(linear.weight.shape)
 
-    x = torch.randn(11, 3, 64, 64).cuda()
+    x = torch.randn(11, 3, 64, 64).to(self.device)
 
     xr = einops.rearrange(x, "b c h w -> b (h w) c").contiguous()
     print(xr.shape)
@@ -280,9 +280,9 @@ def test02():
         dropout=0.0,
         context_dim=None,
         attn_mode="softmax",
-    ).cuda()
+    ).to(self.device)
     try:
-        x = torch.randn(BS, SEQLEN, DIM).cuda()
+        x = torch.randn(BS, SEQLEN, DIM).to(self.device)
         tic = time.time()
         y = model(x)
         toc = time.time()
@@ -299,8 +299,8 @@ def test02():
         dropout=0.0,
         context_dim=None,
         attn_mode="flash-cosine",
-    ).cuda()
-    x = torch.randn(BS, SEQLEN, DIM).cuda()
+    ).to(self.device)
+    x = torch.randn(BS, SEQLEN, DIM).to(self.device)
     tic = time.time()
     y = model(x)
     toc = time.time()
