@@ -8,6 +8,8 @@ from difflib import SequenceMatcher
 import json
 import time
 import numpy as np
+import cv2
+import lpips
 
 
 from vendor.mbrs import Method_MBRS
@@ -15,6 +17,12 @@ from vendor.raw import Method_RAW
 from vendor.dwtdct import Method_DWTDCT, Method_DWTDCTSVD
 from vendor.lsb import Method_LSB, Method_LSB_Robust
 from vendor.vine import Method_VINE
+
+
+from vendor.vine.src.quality_metrics_wbench import (
+    compute_psnr_ssim,
+    compute_lpips,
+)
 from vendor.vine.w_bench_utils import Attacker
 
 
@@ -40,7 +48,7 @@ from vendor.vine.w_bench_utils import Attacker
 #         )
 
 
-def run_config(n_samples, msg, attack: tuple, device: str):
+def run_config(n_samples, msg, attack: tuple, device: str, loss_fn_alex):
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
 
     m_name, method = "InvisibleWM (DWT-DCT-SVD)", Method_DWTDCTSVD(msg)
@@ -72,6 +80,17 @@ def run_config(n_samples, msg, attack: tuple, device: str):
         if attack:
             attacker = Attacker()
             attacked_img = getattr(attacker, attack[0])(attacked_img, **attack[1])
+        try:
+            # original & attacked are PIL RGB → convert to BGR NumPy arrays
+            decoded_cv = cv2.cvtColor(np.array(attacked), cv2.COLOR_RGB2BGR)
+            original_cv = cv2.cvtColor(np.array(original), cv2.COLOR_RGB2BGR)
+
+            psnr_val, ssim_val = compute_psnr_ssim(decoded_cv, original_cv)
+            lpips_val = compute_lpips(decoded_cv, original_cv, loss_fn_alex, device)
+        except Exception as e:
+            psnr_val, ssim_val, lpips_val = float("nan"), float("nan"), float("nan")
+            print(f"{m_name:<30} | MetricError     | {e} | False")
+
         decoded_msg = method.decode(attacked_img)
         if isinstance(decoded_msg, bytes):
             decoded_msg = decoded_msg.decode("utf-8", errors="ignore")
@@ -81,7 +100,10 @@ def run_config(n_samples, msg, attack: tuple, device: str):
             match_rate = SequenceMatcher(None, msg, decoded_msg).ratio()
         else:  # in case of non-str return
             match_rate = decoded_msg
-        print(f"{m_name:<30} | {str(attack):<15} | {repr(match_rate):<20}")
+        print(
+            f"{m_name:<30} | {str(attacks):<15} | {repr(match_rate):<20}",
+            f"| PSNR={psnr_val:.2f} SSIM={ssim_val:.4f} LPIPS={lpips_val:.4f}",
+        )
 
         score.append(match_rate)
 
@@ -100,6 +122,10 @@ def run_config(n_samples, msg, attack: tuple, device: str):
 def run_benchmark():
     DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
     W_BENCH_SUBSET_SIZE = 5
+
+    loss_fn_alex = lpips.LPIPS(net="alex").to(DEVICE)
+
+    attacker = Attacker()
 
     attacks = [
         ("attack_brightness", {"factor": 0.5}),
@@ -212,9 +238,21 @@ def run_benchmark():
         for attack in attacks:
             print(f"\n=== Benchmarking with attack: '{attack}' ===\n")
             result = run_config(
-                n_samples=W_BENCH_SUBSET_SIZE, msg=msg, attack=attack, device=DEVICE
+                n_samples=W_BENCH_SUBSET_SIZE,
+                msg=msg,
+                attacks=attack,
+                device=DEVICE,
+                loss_fn_alex=loss_fn_alex,
             )
-            restults.append({"attacks": attack, "message": msg, "results": result})
+            restults.append(
+                {
+                    "attacks": attack,
+                    "message": msg,
+                    "results": result,
+                    "device": DEVICE,
+                    "loss_fn_alex": loss_fn_alex,
+                }
+            )
 
     with open("benchmark_results.json", "w") as f:
         json.dump(restults, f, indent=4)
