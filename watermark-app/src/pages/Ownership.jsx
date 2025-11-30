@@ -99,6 +99,7 @@ function Ownership() {
   const [claimImage, setClaimImage] = useState(null);
   const [claimImageName, setClaimImageName] = useState("");
   const [claimImagePreview, setClaimImagePreview] = useState(null);
+  const [claimMessage, setClaimMessage] = useState("");
   const [isClaimingOwnership, setIsClaimingOwnership] = useState(false);
   const [claimResult, setClaimResult] = useState(null);
 
@@ -193,6 +194,7 @@ function Ownership() {
         author_name: currentUser.displayName,
         user_id: currentUser.userId,
         timestamp: new Date().toISOString(),
+        ...(claimMessage.trim() && { message: claimMessage.trim() }),
       };
 
       const claimJson = JSON.stringify(claim);
@@ -381,6 +383,71 @@ function Ownership() {
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
+        {/* Methodology Explanation */}
+        <div className="bg-white/80 backdrop-blur-sm border-2 border-cyan-200 rounded-2xl p-6 sm:p-8 mb-8 shadow-lg">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 text-center">
+            How It Works
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="relative pl-12 sm:pl-14">
+              <div className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-xl shadow-lg flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                1
+              </div>
+              <div>
+                <h3 className="font-semibold text-base sm:text-lg text-slate-900 mb-2">
+                  Create Identity
+                </h3>
+                <p className="text-sm text-slate-600">
+                  Generate a cryptographic keypair (RSA-2048) stored securely in
+                  your browser. Your private key signs claims, your public key
+                  allows verification.
+                </p>
+              </div>
+            </div>
+
+            <div className="relative pl-12 sm:pl-14">
+              <div className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl shadow-lg flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                2
+              </div>
+              <div>
+                <h3 className="font-semibold text-base sm:text-lg text-slate-900 mb-2">
+                  Claim Ownership
+                </h3>
+                <p className="text-sm text-slate-600">
+                  Upload an image and add an optional message. Your claim
+                  (author, timestamp, message) is cryptographically signed and
+                  embedded invisibly into the image using LSB watermarking.
+                </p>
+              </div>
+            </div>
+
+            <div className="relative pl-12 sm:pl-14 sm:col-span-2 lg:col-span-1">
+              <div className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-sky-500 rounded-xl shadow-lg flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                3
+              </div>
+              <div>
+                <h3 className="font-semibold text-base sm:text-lg text-slate-900 mb-2">
+                  Verify Authenticity
+                </h3>
+                <p className="text-sm text-slate-600">
+                  Anyone can upload a watermarked image to extract the claim and
+                  verify the signature. Valid signatures prove the image was
+                  signed by the holder of the private key.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200 rounded-lg">
+            <p className="text-xs sm:text-sm text-slate-700">
+              <strong>Security Note:</strong> Your private key never leaves
+              your browser. It's stored in local storage and used only to sign
+              claims locally. The watermark embeds your signed claim, not your
+              private key.
+            </p>
+          </div>
+        </div>
+
         {/* Tabs */}
         <div className="flex gap-2 mb-8 border-b-2 border-slate-200">
           <button
@@ -456,6 +523,33 @@ function Ownership() {
                 </div>
               )}
 
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Optional Message
+                </label>
+                <textarea
+                  value={claimMessage}
+                  onChange={(e) => setClaimMessage(e.target.value)}
+                  placeholder="Add an optional message to embed with your claim (e.g., 'Original artwork created for XYZ Exhibition')"
+                  className="w-full border-2 border-slate-200 rounded-lg px-3 py-2.5 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-200 text-sm resize-none transition-all"
+                  rows="3"
+                  maxLength={200}
+                />
+                <div className="flex justify-between items-center mt-2">
+                  <p className="text-xs text-slate-500">
+                    {claimMessage.length}/200 characters
+                  </p>
+                  {claimMessage.length > 0 && (
+                    <button
+                      onClick={() => setClaimMessage("")}
+                      className="text-xs text-slate-600 hover:text-slate-900 underline"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </div>
+
               <button
                 onClick={handleClaimOwnership}
                 disabled={!claimImage || isClaimingOwnership}
@@ -486,6 +580,16 @@ function Ownership() {
                     <h3 className="text-lg font-bold text-emerald-900 mb-4">
                       ✓ Ownership Claimed Successfully
                     </h3>
+                    {claimMessage && (
+                      <div className="mb-4 p-3 bg-white/50 rounded-lg border border-emerald-200">
+                        <p className="text-xs font-semibold text-emerald-700 mb-1">
+                          Embedded Message:
+                        </p>
+                        <p className="text-sm text-emerald-900 italic">
+                          "{claimMessage}"
+                        </p>
+                      </div>
+                    )}
                     <div className="mb-4">
                       <img
                         src={claimResult.watermarkedImage}
@@ -659,6 +763,17 @@ function Ownership() {
                           {verifyResult.claim?.author_name || "Unknown"}
                         </p>
                       </div>
+
+                      {verifyResult.claim?.message && (
+                        <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-4 rounded-lg border border-cyan-200">
+                          <p className="text-xs font-semibold text-cyan-700 mb-1">
+                            Embedded Message
+                          </p>
+                          <p className="text-sm text-slate-900 italic">
+                            "{verifyResult.claim.message}"
+                          </p>
+                        </div>
+                      )}
 
                       <div className="bg-white/50 p-4 rounded-lg">
                         <p className="text-xs font-semibold text-slate-600 mb-1">
