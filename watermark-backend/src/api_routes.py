@@ -38,11 +38,12 @@ from .crypto_utils import verify_signature
 
 
 from .vendor.lsb import Method_LSB
-from .vendor.dwtdct import Method_DWTDCT
+from .vendor.dwtdct import Method_DWTDCT, Method_DWTDCTSVD
 from .vendor.mbrs import Method_MBRS
 from .vendor.vine import Method_VINE
 
 DwtDct = Method_DWTDCT()
+DwtDctScd = Method_DWTDCTSVD()
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 Mbrs = Method_MBRS(device)
 Vine = Method_VINE(device)
@@ -58,6 +59,9 @@ MOCK_BENCHMARK_RESULTS: Dict[WatermarkAlgorithm, AlgorithmMetrics] = {
     ),
     "dctdwt": AlgorithmMetrics(
         embed_time=0.156, extract_time=0.142, psnr=38.7, ssim=0.967
+    ),
+    "dctdwtsvd": AlgorithmMetrics(
+        embed_time=0.274, extract_time=0.256, psnr=39.5, ssim=0.972
     ),
     "mbrs": AlgorithmMetrics(
         embed_time=0.189, extract_time=0.171, psnr=40.1, ssim=0.978
@@ -94,6 +98,8 @@ async def embed_watermark_endpoint(request: EmbedRequest):
             wm_image = Lsb.encode(pil_img, request.message)
         elif request.algorithm == "dctdwt":
             wm_image = DwtDct.encode(pil_img, request.message)
+        elif request.algorithm == "dctdwtsvd":
+            wm_image = DwtDctScd.encode(pil_img, request.message)
         elif request.algorithm == "mbrs":
             wm_image = Mbrs.encode(pil_img, request.message)
         elif request.algorithm == "vine":
@@ -125,6 +131,8 @@ async def extract_watermark_endpoint(request: ExtractRequest):
             msg = Lsb.decode(pil_img)
         elif request.algorithm == "dctdwt":
             msg = DwtDct.decode(pil_img)
+        elif request.algorithm == "dctdwtsvd":
+            msg = DwtDctScd.decode(pil_img)
         elif request.algorithm == "mbrs":
             msg = Mbrs.decode(pil_img)
         elif request.algorithm == "vine":

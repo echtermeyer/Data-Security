@@ -39,18 +39,24 @@ class Method_DWTDCT(MethodBase):
 
 
 class Method_DWTDCTSVD(MethodBase):
-    def __init__(self, msg):
+    def __init__(self, max_msg_len=32):
         # Encoder/decoder from invisible-watermark (imwatermark)
         self.enc = WatermarkEncoder()
-        self.bits_len = 8 * len(msg)
+        self.bits_len = 8 * max_msg_len
         self.dec = WatermarkDecoder("bytes", self.bits_len)
+        self.block = 8
 
     def encode(self, img_pil, msg):
         # Convert PIL image (RGB) → NumPy BGR (what OpenCV / imwatermark expects)
+        required_len = self.bits_len // 8
+        if len(msg) < required_len:
+            msg = msg.ljust(required_len, "\x00")
+        elif len(msg) > required_len:
+            msg = msg[:required_len]
         img_rgb = np.array(img_pil.convert("RGB"))
         img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
         self.enc.set_watermark("bytes", msg.encode("utf-8"))
-        wm_bgr = self.enc.encode(img_bgr, "dwtDctSvd")
+        wm_bgr = self.enc.encode(img_bgr, "dwtDctSvd", block=self.block)
         wm_rgb = cv2.cvtColor(wm_bgr, cv2.COLOR_BGR2RGB)
         return Image.fromarray(wm_rgb)
 
@@ -60,10 +66,11 @@ class Method_DWTDCTSVD(MethodBase):
         img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
 
         # Decode using the same algorithm
-        wm_bytes = self.dec.decode(img_bgr, "dwtDctSvd")
+        wm_bytes = self.dec.decode(img_bgr, "dwtDctSvd", block=self.block)
 
         # Return string so your pipeline's `SECRET_MSG in decoded` works
         try:
-            return wm_bytes.decode("utf-8", errors="ignore")
+            decoded_str = wm_bytes.decode("utf-8", errors="ignore")
+            return decoded_str.rstrip("\x00")
         except Exception:
             return wm_bytes

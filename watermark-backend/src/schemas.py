@@ -9,7 +9,7 @@ class AlgorithmMetrics(BaseModel):
     ssim: float = Field(...)
 
 
-WatermarkAlgorithm = Literal["lsb", "dctdwt", "mbrs", "vine"]
+WatermarkAlgorithm = Literal["lsb", "dctdwt", "dctdwtsvd", "mbrs", "vine"]
 
 
 class EmbedRequest(BaseModel):
