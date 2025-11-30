@@ -13,40 +13,39 @@ from vendor.raw import Method_RAW
 from vendor.dwtdct import Method_DWTDCT, Method_DWTDCTSVD
 from vendor.lsb import Method_LSB, Method_LSB_Robust
 from vendor.vine import Method_VINE
+from vendor.vine.w_bench_utils import Attacker
 
 
-class Attacker:
-    def __init__(self):
-        # No SDXL pipeline here, so nothing big gets downloaded
-        pass
+# class Attacker:
+#     def __init__(self):
+#         # No SDXL pipeline here, so nothing big gets downloaded
+#         pass
 
-    def attack_jpeg(self, img, quality=50):
-        img.save("temp.jpg", "JPEG", quality=quality)
-        return Image.open("temp.jpg").convert("RGB")
+#     def attack_jpeg(self, img, quality=50):
+#         img.save("temp.jpg", "JPEG", quality=quality)
+#         return Image.open("temp.jpg").convert("RGB")
 
-    def attack_crop(self, img, scale=0.5):
-        w, h = img.size
-        new_w, new_h = int(w * scale), int(h * scale)
-        t = transforms.CenterCrop((new_h, new_w))
-        return t(img).resize((w, h))
+#     def attack_crop(self, img, scale=0.5):
+#         w, h = img.size
+#         new_w, new_h = int(w * scale), int(h * scale)
+#         t = transforms.CenterCrop((new_h, new_w))
+#         return t(img).resize((w, h))
 
-    # You can leave this here for later, but DON'T use it now
-    def attack_regeneration(self, img):
-        raise RuntimeError(
-            "Regeneration attack (SDXL) is disabled for this quick test."
-        )
+#     # You can leave this here for later, but DON'T use it now
+#     def attack_regeneration(self, img):
+#         raise RuntimeError(
+#             "Regeneration attack (SDXL) is disabled for this quick test."
+#         )
 
 
 def run_config(n_samples, msg, attacks: list[tuple], device: str):
-    print(f"Loading W-Bench (Subset: {n_samples})...")
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
-
     methods = {
         # "InvisibleWM (DWT-DCT-SVD)": Method_DWTDCTSVD(msg),
         # "LSB": Method_LSB(),
         # "LSB Robust": Method_LSB_Robust(),
         # "MBRS": Method_MBRS(device),
-        # "InvisibleWM (DWT-DCT)": Method_DWTDCT(msg),
+        "InvisibleWM (DWT-DCT)": Method_DWTDCT(msg),
         # "RAW": Method_RAW(),
         # "VINE": Method_VINE(device),
     }
@@ -80,7 +79,6 @@ def run_config(n_samples, msg, attacks: list[tuple], device: str):
 
             # TODO: get success rate (e.g. fuzzy matching)
             if isinstance(decoded_msg, str):
-                print(msg, decoded_msg)
                 match_rate = SequenceMatcher(None, msg, decoded_msg).ratio()
             else:  # in case of non-str return
                 match_rate = decoded_msg
@@ -122,6 +120,7 @@ def run_benchmark():
     for msg in messages:
         print(f"\n=== Benchmarking with message: '{msg}' ===\n")
         for attack in attacks:
+            print(f"\n=== Benchmarking with attack: '{attack}' ===\n")
             result = run_config(
                 n_samples=W_BENCH_SUBSET_SIZE, msg=msg, attacks=attack, device=DEVICE
             )

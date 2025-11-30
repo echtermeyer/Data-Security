@@ -1,0 +1,534 @@
+[
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 10
+                }
+            ]
+        ],
+        "message": "Hi",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 20
+                }
+            ]
+        ],
+        "message": "Hi",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 30
+                }
+            ]
+        ],
+        "message": "Hi",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 40
+                }
+            ]
+        ],
+        "message": "Hi",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 50
+                }
+            ]
+        ],
+        "message": "Hi",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 60
+                }
+            ]
+        ],
+        "message": "Hi",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 70
+                }
+            ]
+        ],
+        "message": "Hi",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 80
+                }
+            ]
+        ],
+        "message": "Hi",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 90
+                }
+            ]
+        ],
+        "message": "Hi",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [],
+        "message": "Hi",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.6
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 10
+                }
+            ]
+        ],
+        "message": "Carl",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 20
+                }
+            ]
+        ],
+        "message": "Carl",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 30
+                }
+            ]
+        ],
+        "message": "Carl",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 40
+                }
+            ]
+        ],
+        "message": "Carl",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 50
+                }
+            ]
+        ],
+        "message": "Carl",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 60
+                }
+            ]
+        ],
+        "message": "Carl",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 70
+                }
+            ]
+        ],
+        "message": "Carl",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 80
+                }
+            ]
+        ],
+        "message": "Carl",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 90
+                }
+            ]
+        ],
+        "message": "Carl",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.05
+        }
+    },
+    {
+        "attacks": [],
+        "message": "Carl",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.6
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 10
+                }
+            ]
+        ],
+        "message": "Tubingen",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 20
+                }
+            ]
+        ],
+        "message": "Tubingen",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 30
+                }
+            ]
+        ],
+        "message": "Tubingen",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 40
+                }
+            ]
+        ],
+        "message": "Tubingen",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 50
+                }
+            ]
+        ],
+        "message": "Tubingen",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 60
+                }
+            ]
+        ],
+        "message": "Tubingen",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 70
+                }
+            ]
+        ],
+        "message": "Tubingen",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 80
+                }
+            ]
+        ],
+        "message": "Tubingen",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 90
+                }
+            ]
+        ],
+        "message": "Tubingen",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.05
+        }
+    },
+    {
+        "attacks": [],
+        "message": "Tubingen",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.6
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 10
+                }
+            ]
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 20
+                }
+            ]
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 30
+                }
+            ]
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 40
+                }
+            ]
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 50
+                }
+            ]
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 60
+                }
+            ]
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 70
+                }
+            ]
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 80
+                }
+            ]
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.0
+        }
+    },
+    {
+        "attacks": [
+            [
+                "attack_jpeg",
+                {
+                    "quality": 90
+                }
+            ]
+        ],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.053793103448275856
+        }
+    },
+    {
+        "attacks": [],
+        "message": "CanYouSeeMeHere",
+        "results": {
+            "InvisibleWM (DWT-DCT)": 0.6137931034482759
+        }
+    }
+]
