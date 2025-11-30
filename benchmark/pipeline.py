@@ -33,8 +33,8 @@ def run_config(
 ):
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
 
-    # m_name, method = "InvisibleWM (DWT-DCT-SVD)", Method_DWTDCTSVD(msg)
-    m_name, method = "InvisibleWM (DWT-DCT)", Method_DWTDCT(msg)
+    # m_name, method = "DWT-DCT-SVD", Method_DWTDCTSVD(msg)
+    m_name, method = "DWT-DCT", Method_DWTDCT(msg)
     # m_name, method = "LSB", Method_LSB()
     # m_name, method = "LSB Robust", Method_LSB_Robust()
     # m_name, method = "MBRS", Method_MBRS(device)
@@ -164,58 +164,58 @@ def run_benchmark():
 
     attacks = [
         ("attack_brightness", {"factor": 0.5}),
-        ("attack_brightness", {"factor": 0.7}),
-        ("attack_brightness", {"factor": 0.9}),
-        ("attack_brightness", {"factor": 1.1}),
-        ("attack_brightness", {"factor": 1.3}),
-        ("attack_brightness", {"factor": 1.5}),
-        ("attack_brightness", {"factor": 2.0}),
-        # --- Distortion Attacks (Contrast) ---
-        ("attack_contrast", {"factor": 0.5}),
-        ("attack_contrast", {"factor": 0.8}),
-        ("attack_contrast", {"factor": 1.2}),
-        ("attack_contrast", {"factor": 1.5}),
-        ("attack_contrast", {"factor": 2.0}),
-        # --- Distortion Attacks (Blur - Kernel Size) ---
-        ("attack_blur", {"kernel_size": 1}),
-        ("attack_blur", {"kernel_size": 3}),
-        ("attack_blur", {"kernel_size": 5}),
-        ("attack_blur", {"kernel_size": 7}),
-        ("attack_blur", {"kernel_size": 9}),
-        # --- Distortion Attacks (Noise - Standard Deviation) ---
-        ("attack_noise", {"std": 0.01}),
-        ("attack_noise", {"std": 0.03}),
-        ("attack_noise", {"std": 0.05}),
-        ("attack_noise", {"std": 0.08}),
-        ("attack_noise", {"std": 0.1}),
-        # --- Distortion Attacks (JPEG Quality) ---
-        ("attack_jpeg", {"quality": 90}),
-        ("attack_jpeg", {"quality": 80}),
-        ("attack_jpeg", {"quality": 70}),
-        ("attack_jpeg", {"quality": 60}),
-        ("attack_jpeg", {"quality": 50}),
-        ("attack_jpeg", {"quality": 40}),
-        ("attack_jpeg", {"quality": 30}),
-        ("attack_jpeg", {"quality": 20}),
-        ("attack_jpeg", {"quality": 10}),
-        # --- Geometric Attacks (Rotate) ---
-        ("attack_rotate", {"degree": 5}),
-        ("attack_rotate", {"degree": 10}),
-        ("attack_rotate", {"degree": 15}),
-        ("attack_rotate", {"degree": 30}),
-        ("attack_rotate", {"degree": 45}),
-        ("attack_rotate", {"degree": 90}),
-        # --- Geometric Attacks (Scale) ---
-        ("attack_scale", {"scale": 0.9}),
-        ("attack_scale", {"scale": 0.75}),
-        ("attack_scale", {"scale": 0.5}),
-        ("attack_scale", {"scale": 0.25}),
-        # --- Geometric Attacks (Crop - Fraction Kept) ---
-        ("attack_crop", {"crop_size": 0.9}),
-        ("attack_crop", {"crop_size": 0.8}),
-        ("attack_crop", {"crop_size": 0.6}),
-        ("attack_crop", {"crop_size": 0.4}),
-        ("attack_crop", {"crop_size": 0.2}),
+        # ("attack_brightness", {"factor": 0.7}),
+        # ("attack_brightness", {"factor": 0.9}),
+        # ("attack_brightness", {"factor": 1.1}),
+        # ("attack_brightness", {"factor": 1.3}),
+        # ("attack_brightness", {"factor": 1.5}),
+        # ("attack_brightness", {"factor": 2.0}),
+        # # --- Distortion Attacks (Contrast) ---
+        # ("attack_contrast", {"factor": 0.5}),
+        # ("attack_contrast", {"factor": 0.8}),
+        # ("attack_contrast", {"factor": 1.2}),
+        # ("attack_contrast", {"factor": 1.5}),
+        # ("attack_contrast", {"factor": 2.0}),
+        # # --- Distortion Attacks (Blur - Kernel Size) ---
+        # ("attack_blur", {"kernel_size": 1}),
+        # ("attack_blur", {"kernel_size": 3}),
+        # ("attack_blur", {"kernel_size": 5}),
+        # ("attack_blur", {"kernel_size": 7}),
+        # ("attack_blur", {"kernel_size": 9}),
+        # # --- Distortion Attacks (Noise - Standard Deviation) ---
+        # ("attack_noise", {"std": 0.01}),
+        # ("attack_noise", {"std": 0.03}),
+        # ("attack_noise", {"std": 0.05}),
+        # ("attack_noise", {"std": 0.08}),
+        # ("attack_noise", {"std": 0.1}),
+        # # --- Distortion Attacks (JPEG Quality) ---
+        # ("attack_jpeg", {"quality": 90}),
+        # ("attack_jpeg", {"quality": 80}),
+        # ("attack_jpeg", {"quality": 70}),
+        # ("attack_jpeg", {"quality": 60}),
+        # ("attack_jpeg", {"quality": 50}),
+        # ("attack_jpeg", {"quality": 40}),
+        # ("attack_jpeg", {"quality": 30}),
+        # ("attack_jpeg", {"quality": 20}),
+        # ("attack_jpeg", {"quality": 10}),
+        # # --- Geometric Attacks (Rotate) ---
+        # ("attack_rotate", {"degree": 5}),
+        # ("attack_rotate", {"degree": 10}),
+        # ("attack_rotate", {"degree": 15}),
+        # ("attack_rotate", {"degree": 30}),
+        # ("attack_rotate", {"degree": 45}),
+        # ("attack_rotate", {"degree": 90}),
+        # # --- Geometric Attacks (Scale) ---
+        # ("attack_scale", {"scale": 0.9}),
+        # ("attack_scale", {"scale": 0.75}),
+        # ("attack_scale", {"scale": 0.5}),
+        # ("attack_scale", {"scale": 0.25}),
+        # # --- Geometric Attacks (Crop - Fraction Kept) ---
+        # ("attack_crop", {"crop_size": 0.9}),
+        # ("attack_crop", {"crop_size": 0.8}),
+        # ("attack_crop", {"crop_size": 0.6}),
+        # ("attack_crop", {"crop_size": 0.4}),
+        # ("attack_crop", {"crop_size": 0.2}),
         # --- Regeneration Attacks (Diffusion - Noise Step) ---
         # ("attack_diffusion", {"noise_step": 20, "prompt": ""}),
         # ("attack_diffusion", {"noise_step": 40, "prompt": ""}),
@@ -263,10 +263,10 @@ def run_benchmark():
     ]
     messages = [
         "Hi",  # len 2
-        "Carl",  # len 4
-        "Tubingen",  # len 8
-        "CanYouSeeMeHere",  # len 16
-        "HowCoolIsWaterBench?LikeyCooool!",  # len 32
+        # "Carl",  # len 4
+        # "Tubingen",  # len 8
+        # "CanYouSeeMeHere",  # len 16
+        # "HowCoolIsWaterBench?LikeyCooool!",  # len 32
     ]
     results = []
     for msg in messages:
@@ -288,10 +288,10 @@ def run_benchmark():
                     "results": result,
                 }
             )
-
-    with open(f"{results[0]['result']['m_name']}_benchmark_results.json", "w") as f:
+    file_name = f"{results[0]['results']['m_name']}_benchmark_results.json"
+    with open(file_name, "w") as f:
         json.dump(results, f, indent=4)
-    print("Benchmark results saved to benchmark_results.json")
+    print(f"Benchmark results saved to {file_name}")
 
 
 if __name__ == "__main__":
