@@ -4,6 +4,11 @@ from datasets import load_dataset
 from diffusers import AutoPipelineForImage2Image
 from torchvision import transforms
 import matplotlib.pyplot as plt
+import numpy as np
+import cv2
+import lpips
+
+
 
 
 from vendor.mbrs import Method_MBRS
@@ -11,6 +16,12 @@ from vendor.raw import Method_RAW
 from vendor.dwtdct import Method_DWTDCT, Method_DWTDCTSVD
 from vendor.lsb import Method_LSB
 from vendor.vine import Method_VINE
+
+
+from vendor.vine.src.quality_metrics_wbench import (
+    compute_psnr_ssim,
+    compute_lpips,
+)
 
 
 class Attacker:
@@ -35,7 +46,7 @@ class Attacker:
         )
 
 
-def run_config(n_samples, msg, attacks: list[tuple], device: str):
+def run_config(n_samples, msg, attacks: list[tuple], device: str, loss_fn_alex):
     print(f"Loading W-Bench (Subset: {n_samples})...")
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
 
@@ -71,6 +82,20 @@ def run_config(n_samples, msg, attacks: list[tuple], device: str):
                 for attack, kwargs in attacks:
 
                     attacked = attack(attacked, **kwargs)
+
+              # compute PSNR, SSIM, LPIPS using quality_metrics_wbench
+            try:
+                # original & attacked are PIL RGB → convert to BGR NumPy arrays
+                decoded_cv = cv2.cvtColor(np.array(attacked), cv2.COLOR_RGB2BGR)
+                original_cv = cv2.cvtColor(np.array(original), cv2.COLOR_RGB2BGR)
+
+                psnr_val, ssim_val = compute_psnr_ssim(decoded_cv, original_cv)
+                lpips_val = compute_lpips(decoded_cv, original_cv, loss_fn_alex, device)
+            except Exception as e:
+                psnr_val, ssim_val, lpips_val = float("nan"), float("nan"), float("nan")
+                print(f"{m_name:<30} | MetricError     | {e} | False")
+
+
             decoded_msg = method.decode(attacked)
             if isinstance(decoded_msg, bytes):
                 decoded_msg = decoded_msg.decode("utf-8", errors="ignore")
@@ -80,6 +105,7 @@ def run_config(n_samples, msg, attacks: list[tuple], device: str):
 
             print(
                 f"{m_name:<30} | {'JPEG(50)':<15} | {repr(decoded_msg):<20} | {success}"
+                 f"| PSNR={psnr_val:.2f} SSIM={ssim_val:.4f} LPIPS={lpips_val:.4f}"
             )
 
             results[m_name]["Success"] += int(success)
@@ -92,6 +118,8 @@ def run_config(n_samples, msg, attacks: list[tuple], device: str):
 def run_benchmark():
     DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
     W_BENCH_SUBSET_SIZE = 5
+
+    loss_fn_alex = lpips.LPIPS(net='alex').to(DEVICE)
 
     attacker = Attacker()
 
@@ -118,9 +146,9 @@ def run_benchmark():
         print(f"\n=== Benchmarking with message: '{msg}' ===\n")
         for attack in attacks:
             result = run_config(
-                n_samples=W_BENCH_SUBSET_SIZE, msg=msg, attacks=attack, device=DEVICE
+                n_samples=W_BENCH_SUBSET_SIZE, msg=msg, attacks=attack, device=DEVICE, loss_fn_alex=loss_fn_alex,
             )
-            restults.append({"attacks": attack, "message": msg, "results": result})
+            restults.append({"attacks": attack, "message": msg, "results": result, "device": DEVICE, "loss_fn_alex": loss_fn_alex})
 
 
 if __name__ == "__main__":
