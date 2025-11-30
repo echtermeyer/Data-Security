@@ -169,7 +169,7 @@ function BenchmarkMode() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-blue-50/30">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white mb-12">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white mb-8 sm:mb-12">
         <div className="absolute inset-0 opacity-10">
           <div className="grid grid-cols-8 gap-2 p-4">
             {[...Array(32)].map((_, i) => (
@@ -181,12 +181,12 @@ function BenchmarkMode() {
           </div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-blue-400 to-sky-500 bg-clip-text text-transparent pb-2">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-cyan-400 via-blue-400 to-sky-500 bg-clip-text text-transparent pb-2">
               Benchmark Mode
             </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-3xl mx-auto px-2">
               Comprehensive performance comparison of watermarking algorithms
               across multiple evaluation metrics
             </p>
@@ -194,37 +194,37 @@ function BenchmarkMode() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
         {/* Methodology Overview */}
-        <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-8 mb-10 shadow-lg">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">
+        <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-4 sm:p-6 lg:p-8 mb-6 sm:mb-10 shadow-lg">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-4 sm:mb-6">
             Evaluation Metrics
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             <div>
-              <h3 className="font-semibold text-base text-slate-900 mb-2">
+              <h3 className="font-semibold text-sm sm:text-base text-slate-900 mb-2">
                 Imperceptibility
               </h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Measures visual quality preservation using PSNR (Peak
                 Signal-to-Noise Ratio), SSIM (Structural Similarity Index), and
                 MSE (Mean Squared Error).
               </p>
             </div>
             <div>
-              <h3 className="font-semibold text-base text-slate-900 mb-2">
+              <h3 className="font-semibold text-sm sm:text-base text-slate-900 mb-2">
                 Performance
               </h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Evaluates embedding/extraction speed, computational efficiency,
                 and watermark capacity for each algorithm implementation.
               </p>
             </div>
-            <div>
-              <h3 className="font-semibold text-base text-slate-900 mb-2">
+            <div className="sm:col-span-2 lg:col-span-1">
+              <h3 className="font-semibold text-sm sm:text-base text-slate-900 mb-2">
                 Robustness
               </h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Tests resilience against common attacks including JPEG
                 compression, noise injection, rotation, cropping, and filtering
                 operations.
@@ -234,197 +234,205 @@ function BenchmarkMode() {
         </div>
 
         {/* Benchmark Results */}
-        <div className="space-y-8 mb-10">
+        <div className="space-y-6 sm:space-y-8 mb-6 sm:mb-10">
           {/* Imperceptibility Results */}
-          <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-8 shadow-lg">
-            <h2 className="text-xl font-bold text-slate-900 mb-2">
+          <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-4 sm:p-6 lg:p-8 shadow-lg">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-1 sm:mb-2">
               Table 1: Imperceptibility Metrics
             </h2>
-            <p className="text-sm text-slate-600 mb-6">
+            <p className="text-xs sm:text-sm text-slate-600 mb-4 sm:mb-6">
               Quality assessment of watermarked images. Higher PSNR and SSIM
               values indicate better visual fidelity. Lower MSE values are
               preferred.
             </p>
 
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="border-b-2 border-slate-300">
-                    <th className="text-left py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Algorithm
-                    </th>
-                    <th className="text-right py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      PSNR (dB)
-                    </th>
-                    <th className="text-right py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      SSIM
-                    </th>
-                    <th className="text-right py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      MSE
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {benchmarkResults.imperceptibility.map((result, idx) => (
-                    <tr
-                      key={idx}
-                      className="border-b border-slate-200 hover:bg-slate-50 transition-colors"
-                    >
-                      <td className="py-4 px-6 font-medium text-slate-800">
-                        {result.algorithm}
-                      </td>
-                      <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                        {result.psnr.toFixed(1)}
-                      </td>
-                      <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                        {result.ssim.toFixed(3)}
-                      </td>
-                      <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                        {result.mse.toFixed(2)}
-                      </td>
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <div className="inline-block min-w-full align-middle">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="border-b-2 border-slate-300">
+                      <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50">
+                        Algorithm
+                      </th>
+                      <th className="text-right py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50">
+                        PSNR (dB)
+                      </th>
+                      <th className="text-right py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50">
+                        SSIM
+                      </th>
+                      <th className="text-right py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50">
+                        MSE
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {benchmarkResults.imperceptibility.map((result, idx) => (
+                      <tr
+                        key={idx}
+                        className="border-b border-slate-200 hover:bg-slate-50 transition-colors"
+                      >
+                        <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-xs sm:text-sm text-slate-800">
+                          {result.algorithm}
+                        </td>
+                        <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                          {result.psnr.toFixed(1)}
+                        </td>
+                        <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                          {result.ssim.toFixed(3)}
+                        </td>
+                        <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                          {result.mse.toFixed(2)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 
           {/* Performance Results */}
-          <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-8 shadow-lg">
-            <h2 className="text-xl font-bold text-slate-900 mb-2">
+          <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-4 sm:p-6 lg:p-8 shadow-lg">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-1 sm:mb-2">
               Table 2: Performance Metrics
             </h2>
-            <p className="text-sm text-slate-600 mb-6">
+            <p className="text-xs sm:text-sm text-slate-600 mb-4 sm:mb-6">
               Computational efficiency analysis. Embedding and extraction times
               measured in seconds. Capacity indicates payload size capability.
             </p>
 
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="border-b-2 border-slate-300">
-                    <th className="text-left py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Algorithm
-                    </th>
-                    <th className="text-right py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Embed Time (s)
-                    </th>
-                    <th className="text-right py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Extract Time (s)
-                    </th>
-                    <th className="text-center py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Capacity
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {benchmarkResults.performance.map((result, idx) => (
-                    <tr
-                      key={idx}
-                      className="border-b border-slate-200 hover:bg-slate-50 transition-colors"
-                    >
-                      <td className="py-4 px-6 font-medium text-slate-800">
-                        {result.algorithm}
-                      </td>
-                      <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                        {result.embedTime.toFixed(3)}
-                      </td>
-                      <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                        {result.extractTime.toFixed(3)}
-                      </td>
-                      <td className="text-center py-4 px-6 text-sm text-slate-700">
-                        {result.capacity}
-                      </td>
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <div className="inline-block min-w-full align-middle">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="border-b-2 border-slate-300">
+                      <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50">
+                        Algorithm
+                      </th>
+                      <th className="text-right py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50 whitespace-nowrap">
+                        Embed (s)
+                      </th>
+                      <th className="text-right py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50 whitespace-nowrap">
+                        Extract (s)
+                      </th>
+                      <th className="text-center py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50">
+                        Capacity
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {benchmarkResults.performance.map((result, idx) => (
+                      <tr
+                        key={idx}
+                        className="border-b border-slate-200 hover:bg-slate-50 transition-colors"
+                      >
+                        <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-xs sm:text-sm text-slate-800">
+                          {result.algorithm}
+                        </td>
+                        <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                          {result.embedTime.toFixed(3)}
+                        </td>
+                        <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                          {result.extractTime.toFixed(3)}
+                        </td>
+                        <td className="text-center py-3 sm:py-4 px-3 sm:px-6 text-xs sm:text-sm text-slate-700">
+                          {result.capacity}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 
           {/* Robustness Results */}
-          <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-8 shadow-lg">
-            <h2 className="text-xl font-bold text-slate-900 mb-2">
+          <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-4 sm:p-6 lg:p-8 shadow-lg">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-1 sm:mb-2">
               Table 3: Robustness Against Attacks
             </h2>
-            <p className="text-sm text-slate-600 mb-6">
+            <p className="text-xs sm:text-sm text-slate-600 mb-4 sm:mb-6">
               Success rate (%) of watermark extraction after applying various
               attack types. Higher percentages indicate greater robustness.
             </p>
 
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="border-b-2 border-slate-300">
-                    <th className="text-left py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Algorithm
-                    </th>
-                    <th className="text-center py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      JPEG Compression
-                    </th>
-                    <th className="text-center py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Gaussian Noise
-                    </th>
-                    <th className="text-center py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Rotation
-                    </th>
-                    <th className="text-center py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Crop
-                    </th>
-                    <th className="text-center py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Blur
-                    </th>
-                    <th className="text-center py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Brightness
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {benchmarkResults.robustness.map((result, idx) => (
-                    <tr
-                      key={idx}
-                      className="border-b border-slate-200 hover:bg-slate-50 transition-colors"
-                    >
-                      <td className="py-4 px-6 font-medium text-slate-800">
-                        {result.algorithm}
-                      </td>
-                      {Object.entries(result.attacks).map(([attack, score]) => (
-                        <td
-                          key={attack}
-                          className="text-center py-4 px-6 font-mono text-sm text-slate-700"
-                        >
-                          {score}%
-                        </td>
-                      ))}
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <div className="inline-block min-w-full align-middle">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="border-b-2 border-slate-300">
+                      <th className="text-left py-3 sm:py-4 px-2 sm:px-4 lg:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50 sticky left-0 z-10">
+                        Algorithm
+                      </th>
+                      <th className="text-center py-3 sm:py-4 px-2 sm:px-3 lg:px-4 font-semibold text-xs text-slate-900 bg-slate-50 whitespace-nowrap">
+                        JPEG
+                      </th>
+                      <th className="text-center py-3 sm:py-4 px-2 sm:px-3 lg:px-4 font-semibold text-xs text-slate-900 bg-slate-50 whitespace-nowrap">
+                        Noise
+                      </th>
+                      <th className="text-center py-3 sm:py-4 px-2 sm:px-3 lg:px-4 font-semibold text-xs text-slate-900 bg-slate-50 whitespace-nowrap">
+                        Rotation
+                      </th>
+                      <th className="text-center py-3 sm:py-4 px-2 sm:px-3 lg:px-4 font-semibold text-xs text-slate-900 bg-slate-50 whitespace-nowrap">
+                        Crop
+                      </th>
+                      <th className="text-center py-3 sm:py-4 px-2 sm:px-3 lg:px-4 font-semibold text-xs text-slate-900 bg-slate-50 whitespace-nowrap">
+                        Blur
+                      </th>
+                      <th className="text-center py-3 sm:py-4 px-2 sm:px-3 lg:px-4 font-semibold text-xs text-slate-900 bg-slate-50 whitespace-nowrap">
+                        Brightness
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {benchmarkResults.robustness.map((result, idx) => (
+                      <tr
+                        key={idx}
+                        className="border-b border-slate-200 hover:bg-slate-50 transition-colors"
+                      >
+                        <td className="py-3 sm:py-4 px-2 sm:px-4 lg:px-6 font-medium text-xs sm:text-sm text-slate-800 sticky left-0 bg-white z-10">
+                          {result.algorithm}
+                        </td>
+                        {Object.entries(result.attacks).map(
+                          ([attack, score]) => (
+                            <td
+                              key={attack}
+                              className="text-center py-3 sm:py-4 px-2 sm:px-3 lg:px-4 font-mono text-xs sm:text-sm text-slate-700"
+                            >
+                              {score}%
+                            </td>
+                          )
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 
           {/* Summary */}
-          <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-8 shadow-lg">
-            <h2 className="text-xl font-bold text-slate-900 mb-6">
+          <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-4 sm:p-6 lg:p-8 shadow-lg">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-4 sm:mb-6">
               Analysis Summary
             </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="border-l-4 border-cyan-500 pl-4">
-                <h3 className="font-semibold text-slate-900 mb-2">
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="border-l-4 border-cyan-500 pl-3 sm:pl-4">
+                <h3 className="font-semibold text-sm sm:text-base text-slate-900 mb-2">
                   Deep Learning Performance
                 </h3>
-                <p className="text-sm text-slate-700 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
                   Demonstrates superior imperceptibility (PSNR: 44.8 dB, SSIM:
                   0.995) and exceptional robustness across all attack categories
                   (87-95% survival rate). Trade-off includes increased
                   computational complexity with embedding time of 0.842s.
                 </p>
               </div>
-              <div className="border-l-4 border-blue-500 pl-4">
-                <h3 className="font-semibold text-slate-900 mb-2">
+              <div className="border-l-4 border-blue-500 pl-3 sm:pl-4">
+                <h3 className="font-semibold text-sm sm:text-base text-slate-900 mb-2">
                   LSB Characteristics
                 </h3>
-                <p className="text-sm text-slate-700 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
                   Exhibits optimal computational efficiency (0.023s embedding,
                   0.018s extraction) with high payload capacity. However,
                   demonstrates limited robustness to transformation attacks
@@ -432,22 +440,22 @@ function BenchmarkMode() {
                   environments.
                 </p>
               </div>
-              <div className="border-l-4 border-sky-500 pl-4">
-                <h3 className="font-semibold text-slate-900 mb-2">
+              <div className="border-l-4 border-sky-500 pl-3 sm:pl-4">
+                <h3 className="font-semibold text-sm sm:text-base text-slate-900 mb-2">
                   DWT Balance
                 </h3>
-                <p className="text-sm text-slate-700 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
                   Provides balanced performance with moderate robustness (58-88%
                   survival rate), acceptable processing speed (0.189s), and good
                   visual quality (PSNR: 40.1 dB). Optimal choice for
                   general-purpose watermarking applications.
                 </p>
               </div>
-              <div className="border-l-4 border-indigo-500 pl-4">
-                <h3 className="font-semibold text-slate-900 mb-2">
+              <div className="border-l-4 border-indigo-500 pl-3 sm:pl-4">
+                <h3 className="font-semibold text-sm sm:text-base text-slate-900 mb-2">
                   DCT Frequency Domain
                 </h3>
-                <p className="text-sm text-slate-700 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
                   Demonstrates strong resistance to JPEG compression (78%
                   survival) and other frequency-domain transformations.
                   Particularly effective when compression tolerance is a primary
@@ -459,28 +467,28 @@ function BenchmarkMode() {
         </div>
 
         {/* Custom Test Section */}
-        <div className="bg-white/90 backdrop-blur-sm border-2 border-cyan-200 rounded-xl p-8 shadow-lg">
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">
+        <div className="bg-white/90 backdrop-blur-sm border-2 border-cyan-200 rounded-xl p-4 sm:p-6 lg:p-8 shadow-lg">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-1 sm:mb-2">
             Custom Benchmark Analysis
           </h2>
-          <p className="text-sm text-slate-600 mb-6">
+          <p className="text-xs sm:text-sm text-slate-600 mb-4 sm:mb-6">
             Execute a custom benchmark test using your own image and watermark
             payload. All algorithms will be evaluated using the same input
             parameters.
           </p>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-6">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
             {/* Upload/Select Image */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">
                 Test Image
               </label>
               <label className="block w-full cursor-pointer mb-3">
-                <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-cyan-500 hover:bg-cyan-50/50 transition-all">
-                  <div className="w-12 h-12 mx-auto mb-2 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xl">↑</span>
+                <div className="border-2 border-dashed border-slate-300 rounded-lg p-4 sm:p-6 text-center hover:border-cyan-500 hover:bg-cyan-50/50 transition-all">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-lg sm:text-xl">↑</span>
                   </div>
-                  <p className="text-sm text-slate-700 font-medium">
+                  <p className="text-xs sm:text-sm text-slate-700 font-medium">
                     Upload Image
                   </p>
                   <p className="text-xs text-slate-500 mt-1">
@@ -496,7 +504,7 @@ function BenchmarkMode() {
               </label>
               <select
                 onChange={handleSampleSelect}
-                className="w-full border-2 border-slate-200 rounded-lg px-3 py-2.5 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-200 bg-white text-sm transition-all"
+                className="w-full border-2 border-slate-200 rounded-lg px-3 py-2.5 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-200 bg-white text-xs sm:text-sm transition-all"
                 value={
                   sampleImages.find((img) => img.path === selectedImage)?.id ||
                   1
@@ -512,7 +520,7 @@ function BenchmarkMode() {
 
             {/* Image Preview */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">
                 Preview
               </label>
               <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-50 rounded-lg overflow-hidden border-2 border-slate-200 shadow-sm">
@@ -529,14 +537,14 @@ function BenchmarkMode() {
 
             {/* Message Input */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">
                 Watermark Payload
               </label>
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full border-2 border-slate-200 rounded-lg px-3 py-2.5 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-200 text-sm resize-none transition-all"
-                rows="6"
+                className="w-full border-2 border-slate-200 rounded-lg px-3 py-2.5 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-200 text-xs sm:text-sm resize-none transition-all"
+                rows="4"
                 placeholder="Enter test message..."
               />
               <p className="text-xs text-slate-500 mt-2">
@@ -546,14 +554,14 @@ function BenchmarkMode() {
           </div>
 
           <button
-            className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-4 rounded-xl font-semibold hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg hover:shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3 sm:py-4 rounded-xl text-sm sm:text-base font-semibold hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg hover:shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
             onClick={runCustomBenchmark}
             disabled={isRunning}
           >
             {isRunning ? (
-              <span className="flex items-center justify-center gap-3">
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Running Benchmark Analysis...
+              <span className="flex items-center justify-center gap-2 sm:gap-3">
+                <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Running Benchmark...
               </span>
             ) : (
               "Execute Benchmark Test"
@@ -565,13 +573,13 @@ function BenchmarkMode() {
         {showCustomResults && customResults && (
           <div
             id="custom-results"
-            className="mt-8 bg-white/90 backdrop-blur-sm border-2 border-green-300 rounded-xl p-8 shadow-lg scroll-mt-8"
+            className="mt-6 sm:mt-8 bg-white/90 backdrop-blur-sm border-2 border-green-300 rounded-xl p-4 sm:p-6 lg:p-8 shadow-lg scroll-mt-8"
           >
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
               Custom Benchmark Results
             </h2>
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-6">
-              <p className="text-sm text-slate-700">
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+              <p className="text-xs sm:text-sm text-slate-700">
                 Test Image:{" "}
                 <span className="font-semibold">{selectedImageName}</span> |
                 Payload Length:{" "}
@@ -581,102 +589,104 @@ function BenchmarkMode() {
               </p>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="border-b-2 border-slate-300">
-                    <th className="text-left py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Algorithm
-                    </th>
-                    <th className="text-right py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Embed Time (s)
-                    </th>
-                    <th className="text-right py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      Extract Time (s)
-                    </th>
-                    <th className="text-right py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      PSNR (dB)
-                    </th>
-                    <th className="text-right py-4 px-6 font-semibold text-slate-900 bg-slate-50">
-                      SSIM
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                    <td className="py-4 px-6 font-medium text-slate-800">
-                      LSB
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.lsb.embedTime.toFixed(3)}
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.lsb.extractTime.toFixed(3)}
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.lsb.psnr.toFixed(1)}
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.lsb.ssim.toFixed(3)}
-                    </td>
-                  </tr>
-                  <tr className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                    <td className="py-4 px-6 font-medium text-slate-800">
-                      DCT
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.dct.embedTime.toFixed(3)}
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.dct.extractTime.toFixed(3)}
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.dct.psnr.toFixed(1)}
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.dct.ssim.toFixed(3)}
-                    </td>
-                  </tr>
-                  <tr className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                    <td className="py-4 px-6 font-medium text-slate-800">
-                      DWT
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.dwt.embedTime.toFixed(3)}
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.dwt.extractTime.toFixed(3)}
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.dwt.psnr.toFixed(1)}
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.dwt.ssim.toFixed(3)}
-                    </td>
-                  </tr>
-                  <tr className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                    <td className="py-4 px-6 font-medium text-slate-800">
-                      Deep Learning
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.deep.embedTime.toFixed(3)}
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.deep.extractTime.toFixed(3)}
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.deep.psnr.toFixed(1)}
-                    </td>
-                    <td className="text-right py-4 px-6 font-mono text-sm text-slate-700">
-                      {customResults.deep.ssim.toFixed(3)}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <div className="inline-block min-w-full align-middle">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="border-b-2 border-slate-300">
+                      <th className="text-left py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50">
+                        Algorithm
+                      </th>
+                      <th className="text-right py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50 whitespace-nowrap">
+                        Embed (s)
+                      </th>
+                      <th className="text-right py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50 whitespace-nowrap">
+                        Extract (s)
+                      </th>
+                      <th className="text-right py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50 whitespace-nowrap">
+                        PSNR
+                      </th>
+                      <th className="text-right py-3 sm:py-4 px-3 sm:px-6 font-semibold text-xs sm:text-sm text-slate-900 bg-slate-50">
+                        SSIM
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                      <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-xs sm:text-sm text-slate-800">
+                        LSB
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.lsb.embedTime.toFixed(3)}
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.lsb.extractTime.toFixed(3)}
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.lsb.psnr.toFixed(1)}
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.lsb.ssim.toFixed(3)}
+                      </td>
+                    </tr>
+                    <tr className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                      <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-xs sm:text-sm text-slate-800">
+                        DCT
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.dct.embedTime.toFixed(3)}
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.dct.extractTime.toFixed(3)}
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.dct.psnr.toFixed(1)}
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.dct.ssim.toFixed(3)}
+                      </td>
+                    </tr>
+                    <tr className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                      <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-xs sm:text-sm text-slate-800">
+                        DWT
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.dwt.embedTime.toFixed(3)}
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.dwt.extractTime.toFixed(3)}
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.dwt.psnr.toFixed(1)}
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.dwt.ssim.toFixed(3)}
+                      </td>
+                    </tr>
+                    <tr className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                      <td className="py-3 sm:py-4 px-3 sm:px-6 font-medium text-xs sm:text-sm text-slate-800">
+                        Deep Learning
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.deep.embedTime.toFixed(3)}
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.deep.extractTime.toFixed(3)}
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.deep.psnr.toFixed(1)}
+                      </td>
+                      <td className="text-right py-3 sm:py-4 px-3 sm:px-6 font-mono text-xs sm:text-sm text-slate-700">
+                        {customResults.deep.ssim.toFixed(3)}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
 
-            <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-sm text-green-800">
+            <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-xs sm:text-sm text-green-800">
                 <span className="font-semibold">
                   Test completed successfully.
                 </span>{" "}

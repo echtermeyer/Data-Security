@@ -360,7 +360,7 @@ function ChallengeMode() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-blue-50/30">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white mb-12">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white mb-8 sm:mb-12">
         <div className="absolute inset-0 opacity-10">
           <div className="grid grid-cols-8 gap-2 p-4">
             {[...Array(32)].map((_, i) => (
@@ -372,12 +372,12 @@ function ChallengeMode() {
           </div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-blue-400 to-sky-500 bg-clip-text text-transparent pb-2">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-cyan-400 via-blue-400 to-sky-500 bg-clip-text text-transparent pb-2">
               Challenge Mode
             </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-3xl mx-auto px-2">
               Evaluate watermarking algorithm resilience against common image
               transformations and attacks
             </p>
@@ -385,54 +385,54 @@ function ChallengeMode() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
         {/* Methodology Section */}
-        <div className="bg-white/80 backdrop-blur-sm border-2 border-gradient shadow-xl rounded-2xl p-8 mb-10 relative overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-sm border-2 border-gradient shadow-xl rounded-2xl p-4 sm:p-6 lg:p-8 mb-6 sm:mb-10 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-sky-500"></div>
 
-          <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-4 sm:mb-8 text-center">
             Experimental Methodology
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="pl-16 relative">
-              <div className="absolute top-0 left-0 w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl shadow-lg flex items-center justify-center text-white font-bold text-xl">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="pl-12 sm:pl-16 relative">
+              <div className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl shadow-lg flex items-center justify-center text-white font-bold text-lg sm:text-xl">
                 1
               </div>
               <div>
-                <h3 className="font-semibold text-lg text-slate-900 mb-2 bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
+                <h3 className="font-semibold text-base sm:text-lg text-slate-900 mb-2 bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
                   Watermark Embedding
                 </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                   Select a host image and configure the watermarking algorithm.
                   Each technique offers different trade-offs between
                   imperceptibility and robustness.
                 </p>
               </div>
             </div>
-            <div className="pl-16 relative">
-              <div className="absolute top-0 left-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-sky-500 rounded-xl shadow-lg flex items-center justify-center text-white font-bold text-xl">
+            <div className="pl-12 sm:pl-16 relative">
+              <div className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-sky-500 rounded-xl shadow-lg flex items-center justify-center text-white font-bold text-lg sm:text-xl">
                 2
               </div>
               <div>
-                <h3 className="font-semibold text-lg text-slate-900 mb-2 bg-gradient-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">
+                <h3 className="font-semibold text-base sm:text-lg text-slate-900 mb-2 bg-gradient-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">
                   Attack Simulation
                 </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                   Apply various image processing operations to simulate
                   real-world attacks. Transformations include compression, noise
                   injection, geometric distortions, and filtering.
                 </p>
               </div>
             </div>
-            <div className="pl-16 relative">
-              <div className="absolute top-0 left-0 w-12 h-12 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-xl shadow-lg flex items-center justify-center text-white font-bold text-xl">
+            <div className="pl-12 sm:pl-16 relative sm:col-span-2 lg:col-span-1">
+              <div className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-xl shadow-lg flex items-center justify-center text-white font-bold text-lg sm:text-xl">
                 3
               </div>
               <div>
-                <h3 className="font-semibold text-lg text-slate-900 mb-2 bg-gradient-to-r from-sky-600 to-cyan-600 bg-clip-text text-transparent">
+                <h3 className="font-semibold text-base sm:text-lg text-slate-900 mb-2 bg-gradient-to-r from-sky-600 to-cyan-600 bg-clip-text text-transparent">
                   Integrity Verification
                 </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                   Extract the embedded watermark from the attacked image and
                   compare against the original to assess algorithm performance
                   under stress conditions.
@@ -443,24 +443,24 @@ function ChallengeMode() {
         </div>
 
         {/* Configuration Section */}
-        <div className="grid lg:grid-cols-3 gap-6 mb-10">
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-10">
           {/* Image Selection */}
-          <div className="bg-white/90 backdrop-blur-sm border border-cyan-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+          <div className="bg-white/90 backdrop-blur-sm border border-cyan-200 rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-xs sm:text-sm">
                 1
               </div>
-              <h2 className="text-lg font-semibold text-slate-900">
+              <h2 className="text-base sm:text-lg font-semibold text-slate-900">
                 Image Selection
               </h2>
             </div>
 
-            <label className="block w-full cursor-pointer mb-4">
-              <div className="border-2 border-dashed border-cyan-300 rounded-xl p-6 text-center hover:border-cyan-500 hover:bg-cyan-50/50 transition-all duration-200 bg-gradient-to-br from-cyan-50/30 to-blue-50/30">
-                <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-2xl">↑</span>
+            <label className="block w-full cursor-pointer mb-3 sm:mb-4">
+              <div className="border-2 border-dashed border-cyan-300 rounded-xl p-4 sm:p-6 text-center hover:border-cyan-500 hover:bg-cyan-50/50 transition-all duration-200 bg-gradient-to-br from-cyan-50/30 to-blue-50/30">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-3 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xl sm:text-2xl">↑</span>
                 </div>
-                <p className="text-sm text-slate-700 font-semibold">
+                <p className="text-xs sm:text-sm text-slate-700 font-semibold">
                   Upload Image
                 </p>
                 <p className="text-xs text-slate-500 mt-1">
@@ -481,7 +481,7 @@ function ChallengeMode() {
               </label>
               <select
                 onChange={handleSampleSelect}
-                className="w-full border-2 border-slate-200 rounded-lg px-3 py-2.5 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-200 bg-white text-sm transition-all"
+                className="w-full border-2 border-slate-200 rounded-lg px-3 py-2.5 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-200 bg-white text-xs sm:text-sm transition-all"
                 defaultValue=""
               >
                 <option value="" disabled>
@@ -496,7 +496,7 @@ function ChallengeMode() {
             </div>
 
             {selectedImage && (
-              <div className="mt-4">
+              <div className="mt-3 sm:mt-4">
                 <p className="text-xs font-medium text-slate-600 mb-2">
                   Preview:
                 </p>
@@ -516,12 +516,12 @@ function ChallengeMode() {
           </div>
 
           {/* Message Input */}
-          <div className="bg-white/90 backdrop-blur-sm border border-blue-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-sky-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+          <div className="bg-white/90 backdrop-blur-sm border border-blue-200 rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-sky-500 rounded-lg flex items-center justify-center text-white font-bold text-xs sm:text-sm">
                 2
               </div>
-              <h2 className="text-lg font-semibold text-slate-900">
+              <h2 className="text-base sm:text-lg font-semibold text-slate-900">
                 Watermark Payload
               </h2>
             </div>
@@ -529,14 +529,14 @@ function ChallengeMode() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Enter the message to be embedded as a watermark. This payload will be used for extraction verification after attack simulation."
-              className="w-full border-2 border-slate-200 rounded-lg p-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 resize-none text-sm transition-all"
-              rows="8"
+              className="w-full border-2 border-slate-200 rounded-lg p-2.5 sm:p-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 resize-none text-xs sm:text-sm transition-all"
+              rows="6"
             />
             <div className="mt-2 flex justify-between items-center">
               <p className="text-xs text-slate-500">
                 {message.length} characters
               </p>
-              <div className="h-1.5 w-24 bg-slate-200 rounded-full overflow-hidden">
+              <div className="h-1.5 w-20 sm:w-24 bg-slate-200 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-300"
                   style={{
@@ -548,20 +548,20 @@ function ChallengeMode() {
           </div>
 
           {/* Algorithm Selection */}
-          <div className="bg-white/90 backdrop-blur-sm border border-sky-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+          <div className="bg-white/90 backdrop-blur-sm border border-sky-200 rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-sky-500 to-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-xs sm:text-sm">
                 3
               </div>
-              <h2 className="text-lg font-semibold text-slate-900">
+              <h2 className="text-base sm:text-lg font-semibold text-slate-900">
                 Algorithm
               </h2>
             </div>
-            <div className="space-y-3 mb-6">
+            <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
               {algorithms.map((algo) => (
                 <label
                   key={algo.id}
-                  className={`block border-2 rounded-xl p-4 cursor-pointer transition-all duration-200 ${
+                  className={`block border-2 rounded-xl p-3 sm:p-4 cursor-pointer transition-all duration-200 ${
                     algorithm === algo.id
                       ? "border-cyan-500 bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg scale-[1.02]"
                       : "border-slate-200 hover:border-slate-300 hover:shadow-md bg-white"
@@ -578,7 +578,7 @@ function ChallengeMode() {
                   <div>
                     <div className="flex items-center justify-between mb-1">
                       <span
-                        className={`font-bold text-sm ${
+                        className={`font-bold text-xs sm:text-sm ${
                           algorithm === algo.id
                             ? "text-white"
                             : "text-slate-900"
@@ -590,7 +590,7 @@ function ChallengeMode() {
                         {[...Array(5)].map((_, i) => (
                           <div
                             key={i}
-                            className={`w-1.5 h-3 rounded-full ${
+                            className={`w-1 sm:w-1.5 h-2.5 sm:h-3 rounded-full ${
                               i < algo.robustness
                                 ? algorithm === algo.id
                                   ? "bg-white"
@@ -629,14 +629,14 @@ function ChallengeMode() {
             <button
               onClick={handleEmbed}
               disabled={!selectedImage || !message || !algorithm || isLoading}
-              className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3 rounded-xl font-semibold hover:from-cyan-500 hover:to-blue-500 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-cyan-500/50 transform hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-semibold hover:from-cyan-500 hover:to-blue-500 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-cyan-500/50 transform hover:scale-[1.02] active:scale-[0.98]"
             >
               {isLoading && status !== "verified"
                 ? "Processing..."
                 : "Embed Watermark"}
             </button>
             {status === "error" && (
-              <p className="text-sm text-red-600 mt-2 text-center">
+              <p className="text-xs sm:text-sm text-red-600 mt-2 text-center">
                 An error occurred during processing.
               </p>
             )}
@@ -646,35 +646,35 @@ function ChallengeMode() {
         {/* Attack Interface */}
         {watermarkedImage && (
           <div ref={attackSectionRef} className="scroll-mt-8">
-            <div className="border-t-2 border-gradient pt-10 mb-6">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-600 bg-clip-text text-transparent mb-2 text-center">
+            <div className="border-t-2 border-gradient pt-6 sm:pt-10 mb-4 sm:mb-6">
+              <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-600 bg-clip-text text-transparent mb-2 text-center">
                 Attack Simulation
               </h2>
-              <p className="text-center text-slate-600">
+              <p className="text-center text-sm sm:text-base text-slate-600">
                 Apply transformations to test watermark resilience
               </p>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-6">
+            <div className="grid lg:grid-cols-2 gap-4 sm:gap-6">
               {/* Image Preview */}
-              <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-6 shadow-lg">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-slate-900">
+              <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-4 sm:p-6 shadow-lg">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-slate-900">
                     Watermarked Image
                   </h3>
                   {status === "attacking" && (
-                    <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md">
+                    <span className="text-xs font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md">
                       Under Attack
                     </span>
                   )}
                   {status === "verified" && (
-                    <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-500 to-sky-500 text-white shadow-md">
-                      Extraction Complete
+                    <span className="text-xs font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-blue-500 to-sky-500 text-white shadow-md">
+                      Verified
                     </span>
                   )}
                 </div>
 
-                <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-50 rounded-xl flex items-center justify-center border-2 border-slate-200 overflow-hidden mb-4 shadow-inner">
+                <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-50 rounded-xl flex items-center justify-center border-2 border-slate-200 overflow-hidden mb-3 sm:mb-4 shadow-inner">
                   <img
                     src={attackedImage || watermarkedImage}
                     alt="Watermarked"
@@ -685,17 +685,17 @@ function ChallengeMode() {
 
                 <canvas ref={canvasRef} className="hidden" />
 
-                <div className="flex gap-3 mb-4">
+                <div className="flex gap-2 sm:gap-3 mb-3 sm:mb-4">
                   <a
                     href={attackedImage}
                     download={`attacked-image-${Date.now()}.jpeg`}
-                    className="flex-1 text-sm font-medium text-slate-700 hover:text-slate-900 flex items-center justify-center gap-2 py-2.5 border-2 border-slate-300 rounded-lg hover:bg-slate-50 transition-all"
+                    className="flex-1 text-xs sm:text-sm font-medium text-slate-700 hover:text-slate-900 flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 border-2 border-slate-300 rounded-lg hover:bg-slate-50 transition-all"
                   >
                     <span>↓</span> Download
                   </a>
                   <button
                     onClick={resetAttacks}
-                    className="flex-1 text-sm font-medium text-slate-700 hover:text-slate-900 flex items-center justify-center gap-2 py-2.5 border-2 border-slate-300 rounded-lg hover:bg-slate-50 transition-all"
+                    className="flex-1 text-xs sm:text-sm font-medium text-slate-700 hover:text-slate-900 flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 border-2 border-slate-300 rounded-lg hover:bg-slate-50 transition-all"
                   >
                     <span>↻</span> Reset
                   </button>
@@ -705,14 +705,14 @@ function ChallengeMode() {
                 {status === "verified" && (
                   <div className="space-y-3">
                     <div
-                      className={`p-4 rounded-xl border-2 shadow-md ${
+                      className={`p-3 sm:p-4 rounded-xl border-2 shadow-md ${
                         extractedMessage === message
                           ? "bg-gradient-to-br from-emerald-50 to-green-50 border-emerald-300"
                           : "bg-gradient-to-br from-red-50 to-rose-50 border-red-300"
                       }`}
                     >
                       <p
-                        className={`font-bold text-base mb-1 ${
+                        className={`font-bold text-sm sm:text-base mb-1 ${
                           extractedMessage === message
                             ? "text-emerald-900"
                             : "text-red-900"
@@ -723,7 +723,7 @@ function ChallengeMode() {
                           : "✗ Extraction Failed"}
                       </p>
                       <p
-                        className={`text-sm ${
+                        className={`text-xs sm:text-sm ${
                           extractedMessage === message
                             ? "text-emerald-700"
                             : "text-red-700"
@@ -735,8 +735,8 @@ function ChallengeMode() {
                       </p>
                     </div>
 
-                    <div className="p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-slate-200 text-sm shadow-inner">
-                      <div className="grid grid-cols-2 gap-4">
+                    <div className="p-3 sm:p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-slate-200 text-xs sm:text-sm shadow-inner">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
                           <p className="font-semibold text-slate-700 mb-2">
                             Original Message:
@@ -766,19 +766,19 @@ function ChallengeMode() {
               </div>
 
               {/* Attack Controls */}
-              <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-6 shadow-lg">
-                <h3 className="text-lg font-semibold text-slate-900 mb-6">
+              <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl p-4 sm:p-6 shadow-lg">
+                <h3 className="text-base sm:text-lg font-semibold text-slate-900 mb-4 sm:mb-6">
                   Transformation Parameters
                 </h3>
 
-                <div className="space-y-5">
+                <div className="space-y-4 sm:space-y-5">
                   {/* Brightness */}
                   <div>
                     <label className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-semibold text-slate-700">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-700">
                         Brightness
                       </span>
-                      <span className="text-xs font-mono bg-slate-100 px-3 py-1 rounded-full text-slate-700 border border-slate-200">
+                      <span className="text-xs font-mono bg-slate-100 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-slate-700 border border-slate-200">
                         {brightness > 0 ? "+" : ""}
                         {brightness}%
                       </span>
@@ -789,17 +789,17 @@ function ChallengeMode() {
                       max="100"
                       value={brightness}
                       onChange={(e) => setBrightness(parseInt(e.target.value))}
-                      className="w-full h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
+                      className="w-full h-2 sm:h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
                     />
                   </div>
 
                   {/* Blur */}
                   <div>
                     <label className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-semibold text-slate-700">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-700">
                         Gaussian Blur
                       </span>
-                      <span className="text-xs font-mono bg-slate-100 px-3 py-1 rounded-full text-slate-700 border border-slate-200">
+                      <span className="text-xs font-mono bg-slate-100 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-slate-700 border border-slate-200">
                         {blur}px
                       </span>
                     </label>
@@ -809,17 +809,17 @@ function ChallengeMode() {
                       max="20"
                       value={blur}
                       onChange={(e) => setBlur(parseInt(e.target.value))}
-                      className="w-full h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
+                      className="w-full h-2 sm:h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
                     />
                   </div>
 
                   {/* Noise */}
                   <div>
                     <label className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-semibold text-slate-700">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-700">
                         Random Noise
                       </span>
-                      <span className="text-xs font-mono bg-slate-100 px-3 py-1 rounded-full text-slate-700 border border-slate-200">
+                      <span className="text-xs font-mono bg-slate-100 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-slate-700 border border-slate-200">
                         {noise}%
                       </span>
                     </label>
@@ -829,17 +829,17 @@ function ChallengeMode() {
                       max="100"
                       value={noise}
                       onChange={(e) => setNoise(parseInt(e.target.value))}
-                      className="w-full h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
+                      className="w-full h-2 sm:h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
                     />
                   </div>
 
                   {/* Rotation */}
                   <div>
                     <label className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-semibold text-slate-700">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-700">
                         Rotation
                       </span>
-                      <span className="text-xs font-mono bg-slate-100 px-3 py-1 rounded-full text-slate-700 border border-slate-200">
+                      <span className="text-xs font-mono bg-slate-100 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-slate-700 border border-slate-200">
                         {rotation}°
                       </span>
                     </label>
@@ -849,17 +849,17 @@ function ChallengeMode() {
                       max="180"
                       value={rotation}
                       onChange={(e) => setRotation(parseInt(e.target.value))}
-                      className="w-full h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
+                      className="w-full h-2 sm:h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
                     />
                   </div>
 
                   {/* Compression */}
                   <div>
                     <label className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-semibold text-slate-700">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-700">
                         JPEG Quality
                       </span>
-                      <span className="text-xs font-mono bg-slate-100 px-3 py-1 rounded-full text-slate-700 border border-slate-200">
+                      <span className="text-xs font-mono bg-slate-100 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-slate-700 border border-slate-200">
                         {compression}%
                       </span>
                     </label>
@@ -869,17 +869,17 @@ function ChallengeMode() {
                       max="100"
                       value={compression}
                       onChange={(e) => setCompression(parseInt(e.target.value))}
-                      className="w-full h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
+                      className="w-full h-2 sm:h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
                     />
                   </div>
 
                   {/* Crop */}
                   <div>
                     <label className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-semibold text-slate-700">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-700">
                         Cropping
                       </span>
-                      <span className="text-xs font-mono bg-slate-100 px-3 py-1 rounded-full text-slate-700 border border-slate-200">
+                      <span className="text-xs font-mono bg-slate-100 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-slate-700 border border-slate-200">
                         {cropAmount}%
                       </span>
                     </label>
@@ -889,31 +889,31 @@ function ChallengeMode() {
                       max="50"
                       value={cropAmount}
                       onChange={(e) => setCropAmount(parseInt(e.target.value))}
-                      className="w-full h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
+                      className="w-full h-2 sm:h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
                     />
                   </div>
 
                   {/* Quick Presets */}
-                  <div className="pt-4 border-t-2 border-slate-200">
-                    <p className="text-sm font-semibold text-slate-700 mb-3">
+                  <div className="pt-3 sm:pt-4 border-t-2 border-slate-200">
+                    <p className="text-xs sm:text-sm font-semibold text-slate-700 mb-2 sm:mb-3">
                       Quick Attack Presets
                     </p>
                     <div className="grid grid-cols-3 gap-2">
                       <button
                         onClick={() => applyQuickAttack("light")}
-                        className="px-3 py-2.5 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-all text-sm font-medium border-2 border-slate-300 hover:border-slate-400"
+                        className="px-2 sm:px-3 py-2 sm:py-2.5 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-all text-xs sm:text-sm font-medium border-2 border-slate-300 hover:border-slate-400"
                       >
                         Light
                       </button>
                       <button
                         onClick={() => applyQuickAttack("heavy")}
-                        className="px-3 py-2.5 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-all text-sm font-medium border-2 border-slate-300 hover:border-slate-400"
+                        className="px-2 sm:px-3 py-2 sm:py-2.5 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-all text-xs sm:text-sm font-medium border-2 border-slate-300 hover:border-slate-400"
                       >
                         Moderate
                       </button>
                       <button
                         onClick={() => applyQuickAttack("extreme")}
-                        className="px-3 py-2.5 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-all text-sm font-medium border-2 border-slate-300 hover:border-slate-400"
+                        className="px-2 sm:px-3 py-2 sm:py-2.5 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition-all text-xs sm:text-sm font-medium border-2 border-slate-300 hover:border-slate-400"
                       >
                         Severe
                       </button>
@@ -925,7 +925,7 @@ function ChallengeMode() {
                 <button
                   onClick={handleExtract}
                   disabled={isLoading || status === "embedded"}
-                  className="w-full mt-6 bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-4 rounded-xl font-bold text-base hover:from-cyan-500 hover:to-blue-500 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-cyan-500/50 transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full mt-4 sm:mt-6 bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base hover:from-cyan-500 hover:to-blue-500 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-cyan-500/50 transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   {isLoading ? "Extracting Watermark..." : "Extract Watermark"}
                 </button>
