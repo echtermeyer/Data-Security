@@ -7,6 +7,9 @@ from imwatermark import WatermarkEncoder, WatermarkDecoder
 from diffusers import AutoPipelineForImage2Image
 from torchvision import transforms
 import matplotlib.pyplot as plt
+from torchvision.transforms.functional import to_tensor, to_pil_image
+
+from vendor.raw.scripts import raw, tools
 
 
 # --- CONFIGURATION ---
@@ -103,6 +106,21 @@ class Method_LSB(MethodBase):
         return "".join(chars)
 
 
+class Method_RAW(MethodBase):
+    def __init__(self):
+        self.device = "mps" if torch.cuda.is_available() else "cpu"
+        self.RAW = raw.RAWatermark(device=self.device, wm_index=0)
+
+    def encode(self, img_pil, msg):
+        img = to_tensor(img_pil).unsqueeze(0).to(self.device)
+        wm_image = self.RAW.encode_img(img)
+        return to_pil_image(wm_image.squeeze(0).clamp(0, 1).cpu())
+
+    def decode(self, img_pil):
+        msg = self.RAW.detect_img(img_pil, decision_thres=0.5, prob=True)
+        return msg
+
+
 # --- PLACEHOLDERS FOR DEEP METHODS (Requires External Repos) ---
 class Method_Deep_Template(MethodBase):
     def __init__(self, model_path):
@@ -125,7 +143,7 @@ class Attacker:
         # No SDXL pipeline here, so nothing big gets downloaded
         pass
 
-    def attack_jpeg(self, img, quality=90):
+    def attack_jpeg(self, img, quality=50):
         img.save("temp.jpg", "JPEG", quality=quality)
         return Image.open("temp.jpg").convert("RGB")
 
@@ -145,7 +163,7 @@ class Attacker:
 # --- 3. MAIN PIPELINE ---
 
 
-def run_benchmark(n_samples=1, attack=True):
+def run_benchmark(n_samples=1, attack=True, verbose=True):
     print(f"Loading W-Bench (Subset: {n_samples})...")
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
 
@@ -154,6 +172,7 @@ def run_benchmark(n_samples=1, attack=True):
     methods = {
         "InvisibleWM (DWT-DCT-SVD)": Method_DWTDCTSVD(),
         "InvisibleWM (DWT-DCT)": Method_DWTDCT(),
+        "RAW": Method_RAW(),
     }
 
     results = {m: {"Success": 0, "Total": 0} for m in methods}
@@ -178,7 +197,7 @@ def run_benchmark(n_samples=1, attack=True):
 
             # 2. Attack
             if attack:
-                attacked = attacker.attack_jpeg(watermarked, 90)
+                attacked = attacker.attack_jpeg(watermarked, 40)
                 decoded_msg = method.decode(attacked)
             else:
                 decoded_msg = method.decode(watermarked)
@@ -228,4 +247,4 @@ def run_benchmark(n_samples=1, attack=True):
 
 
 if __name__ == "__main__":
-    run_benchmark(n_samples=3, attack=False)
+    run_benchmark(n_samples=500, attack=True)
