@@ -10,7 +10,7 @@ from vendor.mbrs import Method_MBRS
 from vendor.raw import Method_RAW
 from vendor.dwtdct import Method_DWTDCT, Method_DWTDCTSVD
 from vendor.lsb import Method_LSB
-
+from vendor.vine import Method_VINE
 
 
 class Attacker:
@@ -35,17 +35,17 @@ class Attacker:
         )
 
 
-def run_config(n_samples=1, msg, attacks: list[tuple], verbose=True):
+def run_config(n_samples, msg, attacks: list[tuple], device: str):
     print(f"Loading W-Bench (Subset: {n_samples})...")
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
 
-
     methods = {
-        "InvisibleWM (DWT-DCT-SVD)": Method_DWTDCTSVD(msg),
-        "LBS": Method_LSB(),
-        "MBRS": Method_MBRS(DEVICE),
-        "InvisibleWM (DWT-DCT)": Method_DWTDCT(msg),
-        "RAW": Method_RAW(),
+        # "InvisibleWM (DWT-DCT-SVD)": Method_DWTDCTSVD(msg),
+        # "LBS": Method_LSB(),
+        # "MBRS": Method_MBRS(device),
+        # "InvisibleWM (DWT-DCT)": Method_DWTDCT(msg),
+        # "RAW": Method_RAW(),
+        "VINE": Method_VINE(device),
     }
 
     results = {m: {"Success": 0, "Total": 0} for m in methods}
@@ -69,7 +69,7 @@ def run_config(n_samples=1, msg, attacks: list[tuple], verbose=True):
             attacked = watermarked
             if attacks:
                 for attack, kwargs in attacks:
-                
+
                     attacked = attack(attacked, **kwargs)
             decoded_msg = method.decode(attacked)
             if isinstance(decoded_msg, bytes):
@@ -86,48 +86,42 @@ def run_config(n_samples=1, msg, attacks: list[tuple], verbose=True):
             results[m_name]["Total"] += 1
 
         count += 1
+    return results
 
-    print("\n--- FINAL SCORES ---")
-    for m, data in results.items():
-        acc = (data["Success"] / data["Total"]) * 100 if data["Total"] > 0 else 0
-        print(f"{m}: {acc:.1f}% Accuracy")
 
 def run_benchmark():
     DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
-    W_BENCH_SUBSET_SIZE = 5  # Keep small for M3 testing
-    SECRET_MSG = "Test1234"  # 64-bit equivalent usually required
+    W_BENCH_SUBSET_SIZE = 5
 
     attacker = Attacker()
 
     attacks = [
-        [(attacker.attack_jpeg, {"quality": 10})],
-        [(attacker.attack_jpeg, {"quality": 20})],
-        [(attacker.attack_jpeg, {"quality": 30})],
-        [(attacker.attack_jpeg, {"quality": 40})],
-        [(attacker.attack_jpeg, {"quality": 50})], 
-        [(attacker.attack_jpeg, {"quality": 60})],
-        [(attacker.attack_jpeg, {"quality": 70})],
-        [(attacker.attack_jpeg, {"quality": 80})],
+        # [(attacker.attack_jpeg, {"quality": 10})],
+        # [(attacker.attack_jpeg, {"quality": 20})],
+        # [(attacker.attack_jpeg, {"quality": 30})],
+        # [(attacker.attack_jpeg, {"quality": 40})],
+        # [(attacker.attack_jpeg, {"quality": 50})],
+        # [(attacker.attack_jpeg, {"quality": 60})],
+        # [(attacker.attack_jpeg, {"quality": 70})],
+        # [(attacker.attack_jpeg, {"quality": 80})],
         [(attacker.attack_jpeg, {"quality": 90})],
     ]
     messages = [
-        "Hey", # len 3
-        "Carlos",  # len 6
-        "CanYouSeeMee", # len 12
-        "DataScienceIsSuperCool!?", # len 24
-        "MyGreenSockHasAHoleAndNowMyToeIsFreezingTerribly", # len 48
+        "Hey",  # len 3
+        # "Carlos",  # len 6
+        # "CanYouSeeMee",  # len 12
+        # "DataScienceIsSuperCool!?",  # len 24
+        # "MyGreenSockHasAHoleAndNowMyToeIsFreezingTerribly",  # len 48
     ]
-    
+    restults = []
     for msg in messages:
         print(f"\n=== Benchmarking with message: '{msg}' ===\n")
         for attack in attacks:
-            run_config(
-                n_samples=W_BENCH_SUBSET_SIZE,
-                msg=msg,
-                attacks=attack,
-                verbose=False,
+            result = run_config(
+                n_samples=W_BENCH_SUBSET_SIZE, msg=msg, attacks=attack, device=DEVICE
             )
+            restults.append({"attacks": attack, "message": msg, "results": result})
+
 
 if __name__ == "__main__":
     run_benchmark()
-    

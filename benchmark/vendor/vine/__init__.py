@@ -1,15 +1,19 @@
 from vendor import MethodBase
 from vendor.vine.src.vine_turbo import VINE_Turbo
+from vendor.vine.src.stega_encoder_decoder import CustomConvNeXt
 from torchvision import transforms
+from torchvision.transforms.functional import to_tensor, to_pil_image
 import torch
-import time
+import numpy as np
 
 
-class Method_RAW(MethodBase):
+class Method_VINE(MethodBase):
     def __init__(self, device):
         self.device = device
         self.watermark_encoder = VINE_Turbo.from_pretrained("Shilin-LU/VINE-R-Enc")
         self.watermark_encoder.to(device)
+        self.watermark_decoder = CustomConvNeXt.from_pretrained("Shilin-LU/VINE-R-Dec")
+        self.watermark_decoder.to(device)
 
     def crop_to_square(self, image):
         width, height = image.size
@@ -78,4 +82,41 @@ class Method_RAW(MethodBase):
         return output_pil
 
     def decode(self, img_pil):
-        pass
+
+        ### ============= transform image =============
+        t_val_256 = transforms.Compose(
+            [
+                transforms.Resize(
+                    256, interpolation=transforms.InterpolationMode.BICUBIC
+                ),
+                transforms.ToTensor(),
+            ]
+        )
+        image = t_val_256(img_pil).unsqueeze(0).to(self.device)
+
+        ### ============= watermark decoding & detection =============
+        pred_watermark = self.watermark_decoder(image)
+        pred_watermark = np.array(pred_watermark[0].cpu().detach())
+        pred_watermark = np.round(pred_watermark)
+        pred_watermark = pred_watermark.astype(int)
+        pred_watermark_list = pred_watermark.tolist()
+
+        ### ============= convert bits back to message =============
+        # The watermark is 100 bits (96 bits for 12 chars + 4 padding bits)
+        # Remove the last 4 padding bits
+        message_bits = pred_watermark_list[:96]
+
+        # Convert bits to bytes (8 bits per character)
+        message_bytes = bytearray()
+        for i in range(0, len(message_bits), 8):
+            byte_bits = message_bits[i : i + 8]
+            byte_value = int("".join(map(str, byte_bits)), 2)
+            message_bytes.append(byte_value)
+
+        # Decode bytes to string and strip padding spaces
+        try:
+            decoded_message = message_bytes.decode("utf-8").rstrip()
+        except:
+            decoded_message = "DecodingError"
+
+        return decoded_message
