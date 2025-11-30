@@ -64,6 +64,9 @@ class AuthorshipClaim(BaseModel):
     author_name: str = Field(...)
     user_id: str = Field(...)
     timestamp: str = Field(...)
+    message: Optional[str] = Field(
+        default=None, description="Optional message embedded with the claim"
+    )
 
 
 class ClaimOwnershipRequest(BaseModel):
