@@ -4,12 +4,14 @@ from datasets import load_dataset
 from diffusers import AutoPipelineForImage2Image
 from torchvision import transforms
 import matplotlib.pyplot as plt
+from difflib import SequenceMatcher
+import json
 
 
 from vendor.mbrs import Method_MBRS
 from vendor.raw import Method_RAW
 from vendor.dwtdct import Method_DWTDCT, Method_DWTDCTSVD
-from vendor.lsb import Method_LSB
+from vendor.lsb import Method_LSB, Method_LSB_Robust
 from vendor.vine import Method_VINE
 
 
@@ -41,14 +43,15 @@ def run_config(n_samples, msg, attacks: list[tuple], device: str):
 
     methods = {
         # "InvisibleWM (DWT-DCT-SVD)": Method_DWTDCTSVD(msg),
-        # "LBS": Method_LSB(),
+        # "LSB": Method_LSB(),
+        # "LSB Robust": Method_LSB_Robust(),
         # "MBRS": Method_MBRS(device),
         # "InvisibleWM (DWT-DCT)": Method_DWTDCT(msg),
         # "RAW": Method_RAW(),
-        "VINE": Method_VINE(device),
+        # "VINE": Method_VINE(device),
     }
 
-    results = {m: {"Success": 0, "Total": 0} for m in methods}
+    results = {m: {"Match": 0.0, "Total": 0} for m in methods}
 
     print(f"{'Method':<30} | {'Attack':<15} | {'Decoded'} | {'Success?'}")
     print("-" * 80)
@@ -66,52 +69,54 @@ def run_config(n_samples, msg, attacks: list[tuple], device: str):
             except Exception as e:
                 print(f"{m_name:<30} | {'EmbedError':<15} | {e} | False")
                 continue
-            attacked = watermarked
+            attacked_img = watermarked
             if attacks:
+                attacker = Attacker()
                 for attack, kwargs in attacks:
-
-                    attacked = attack(attacked, **kwargs)
-            decoded_msg = method.decode(attacked)
+                    attacked_img = getattr(attacker, attack)(attacked_img, **kwargs)
+            decoded_msg = method.decode(attacked_img)
             if isinstance(decoded_msg, bytes):
                 decoded_msg = decoded_msg.decode("utf-8", errors="ignore")
 
             # TODO: get success rate (e.g. fuzzy matching)
-            success = msg in str(decoded_msg)
+            if isinstance(decoded_msg, str):
+                print(msg, decoded_msg)
+                match_rate = SequenceMatcher(None, msg, decoded_msg).ratio()
+            else:  # in case of non-str return
+                match_rate = decoded_msg
+            print(f"{m_name:<30} | {'JPEG(50)':<15} | {repr(match_rate):<20}")
 
-            print(
-                f"{m_name:<30} | {'JPEG(50)':<15} | {repr(decoded_msg):<20} | {success}"
-            )
-
-            results[m_name]["Success"] += int(success)
+            results[m_name]["Match"] += match_rate
             results[m_name]["Total"] += 1
 
         count += 1
-    return results
+    final_results = {}
+    for m_name, res in results.items():
+        final_results[m_name] = res["Match"] / res["Total"] if res["Total"] > 0 else 0.0
+    return final_results
 
 
 def run_benchmark():
     DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
     W_BENCH_SUBSET_SIZE = 5
 
-    attacker = Attacker()
-
     attacks = [
-        # [(attacker.attack_jpeg, {"quality": 10})],
-        # [(attacker.attack_jpeg, {"quality": 20})],
-        # [(attacker.attack_jpeg, {"quality": 30})],
-        # [(attacker.attack_jpeg, {"quality": 40})],
-        # [(attacker.attack_jpeg, {"quality": 50})],
-        # [(attacker.attack_jpeg, {"quality": 60})],
-        # [(attacker.attack_jpeg, {"quality": 70})],
-        # [(attacker.attack_jpeg, {"quality": 80})],
-        [(attacker.attack_jpeg, {"quality": 90})],
+        [("attack_jpeg", {"quality": 10})],
+        [("attack_jpeg", {"quality": 20})],
+        [("attack_jpeg", {"quality": 30})],
+        [("attack_jpeg", {"quality": 40})],
+        [("attack_jpeg", {"quality": 50})],
+        [("attack_jpeg", {"quality": 60})],
+        [("attack_jpeg", {"quality": 70})],
+        [("attack_jpeg", {"quality": 80})],
+        [("attack_jpeg", {"quality": 90})],
+        [],
     ]
     messages = [
-        "Hey",  # len 3
-        # "Carlos",  # len 6
-        # "CanYouSeeMee",  # len 12
-        # "DataScienceIsSuperCool!?",  # len 24
-        # "MyGreenSockHasAHoleAndNowMyToeIsFreezingTerribly",  # len 48
+        "Hi",  # len 2
+        "Carl",  # len 4
+        "Tubingen",  # len 8
+        "CanYouSeeMeHere",  # len 16
     ]
     restults = []
     for msg in messages:
@@ -121,6 +126,10 @@ def run_benchmark():
                 n_samples=W_BENCH_SUBSET_SIZE, msg=msg, attacks=attack, device=DEVICE
             )
             restults.append({"attacks": attack, "message": msg, "results": result})
+
+    with open("benchmark_results.json", "w") as f:
+        json.dump(restults, f, indent=4)
+    print("Benchmark results saved to benchmark_results.json")
 
 
 if __name__ == "__main__":
