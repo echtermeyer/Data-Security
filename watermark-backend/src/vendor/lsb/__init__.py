@@ -1,4 +1,4 @@
-from vendor import MethodBase
+from src.vendor import MethodBase
 from PIL import Image
 import numpy as np
 

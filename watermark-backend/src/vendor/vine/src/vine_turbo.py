@@ -6,8 +6,8 @@ from transformers import AutoTokenizer, CLIPTextModel
 from diffusers import AutoencoderKL, UNet2DConditionModel
 from peft import LoraConfig
 from huggingface_hub import PyTorchModelHubMixin
-from vendor.vine.src.stega_encoder_decoder import ConditionAdaptor
-from vendor.vine.src.model import (
+from src.vendor.vine.src.stega_encoder_decoder import ConditionAdaptor
+from src.vendor.vine.src.model import (
     make_1step_sched,
     my_vae_encoder_fwd,
     my_vae_decoder_fwd,

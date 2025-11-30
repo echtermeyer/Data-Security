@@ -1,7 +1,7 @@
 import torch
 from torchvision import transforms
-from vendor.mbrs.network.Network import Network
-from vendor import MethodBase
+from src.vendor.mbrs.network.Network import Network
+from src.vendor import MethodBase
 from PIL import Image
 import json, os
 
