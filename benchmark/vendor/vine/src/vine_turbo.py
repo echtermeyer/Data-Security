@@ -124,7 +124,7 @@ def initialize_unet_no_lora(path="stabilityai/sd-turbo"):
     return unet
 
 
-def initialize_vae(rank=4, return_lora_module_names=False):
+def initialize_vae(rank=4, return_lora_module_names=False,device="mps"):
     vae = AutoencoderKL.from_pretrained("stabilityai/sd-turbo", subfolder="vae")
     vae.requires_grad_(False)
     vae.encoder.forward = my_vae_encoder_fwd.__get__(vae.encoder, vae.encoder.__class__)
@@ -134,22 +134,22 @@ def initialize_vae(rank=4, return_lora_module_names=False):
     # add the skip connection convs
     vae.decoder.skip_conv_1 = (
         torch.nn.Conv2d(512, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        .cuda()
+        .to(device)
         .requires_grad_(True)
     )
     vae.decoder.skip_conv_2 = (
         torch.nn.Conv2d(256, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        .cuda()
+        .to(device)
         .requires_grad_(True)
     )
     vae.decoder.skip_conv_3 = (
         torch.nn.Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        .cuda()
+        .to(device)
         .requires_grad_(True)
     )
     vae.decoder.skip_conv_4 = (
         torch.nn.Conv2d(128, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
-        .cuda()
+        .to(device)
         .requires_grad_(True)
     )
     torch.nn.init.constant_(vae.decoder.skip_conv_1.weight, 1e-5)
@@ -184,7 +184,7 @@ def initialize_vae(rank=4, return_lora_module_names=False):
         return vae
 
 
-def initialize_vae_no_lora(path="stabilityai/sd-turbo"):
+def initialize_vae_no_lora(path="stabilityai/sd-turbo",device="mps"):
     vae = AutoencoderKL.from_pretrained(path, subfolder="vae")
     vae.encoder.forward = my_vae_encoder_fwd.__get__(vae.encoder, vae.encoder.__class__)
     vae.decoder.forward = my_vae_decoder_fwd.__get__(vae.decoder, vae.decoder.__class__)
@@ -195,28 +195,28 @@ def initialize_vae_no_lora(path="stabilityai/sd-turbo"):
         torch.nn.Conv2d(
             512, 512, kernel_size=(3, 3), stride=(1, 1), padding=1, bias=True
         )
-        .cuda()
+        .to(device)
         .requires_grad_(True)
     )
     vae.decoder.skip_conv_2 = (
         torch.nn.Conv2d(
             256, 512, kernel_size=(3, 3), stride=(1, 1), padding=1, bias=True
         )
-        .cuda()
+        .to(device)
         .requires_grad_(True)
     )
     vae.decoder.skip_conv_3 = (
         torch.nn.Conv2d(
             128, 512, kernel_size=(3, 3), stride=(1, 1), padding=1, bias=True
         )
-        .cuda()
+        .to(device)
         .requires_grad_(True)
     )
     vae.decoder.skip_conv_4 = (
         torch.nn.Conv2d(
             128, 256, kernel_size=(3, 3), stride=(1, 1), padding=1, bias=True
         )
-        .cuda()
+        .to(device)
         .requires_grad_(True)
     )
     torch.nn.init.constant_(vae.decoder.skip_conv_1.weight, 1e-5)
@@ -230,8 +230,9 @@ def initialize_vae_no_lora(path="stabilityai/sd-turbo"):
 
 
 class VINE_Turbo(torch.nn.Module, PyTorchModelHubMixin):
-    def __init__(self, ckpt_path=None, device="cuda"):
+    def __init__(self, ckpt_path=None, device="mps"):
         super().__init__()
+        self.device = torch.device(device)
         tokenizer = AutoTokenizer.from_pretrained(
             "stabilityai/sd-turbo",
             subfolder="tokenizer",
@@ -255,7 +256,7 @@ class VINE_Turbo(torch.nn.Module, PyTorchModelHubMixin):
         )[0].detach()
         del text_encoder, tokenizer, fixed_a2b_tokens  # free up some memory
         gc.collect()
-        torch.cuda.empty_cache()
+        
 
         self.sec_encoder = ConditionAdaptor()
         self.unet = initialize_unet_no_lora()

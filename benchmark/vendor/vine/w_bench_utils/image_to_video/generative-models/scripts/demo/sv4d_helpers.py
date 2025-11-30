@@ -37,7 +37,7 @@ from sgm.util import default, instantiate_from_config
 
 
 def load_module_gpu(model):
-    model.cuda()
+    model.to(self.device)
 
 
 def unload_module_gpu(model):

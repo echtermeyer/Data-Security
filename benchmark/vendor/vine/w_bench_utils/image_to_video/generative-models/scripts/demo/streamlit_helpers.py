@@ -61,7 +61,7 @@ def init_st(version_dict, load_ckpt=True, load_filter=True):
 
 
 def load_model(model):
-    model.cuda()
+    model.to(self.device)
 
 
 lowvram_mode = True
@@ -77,7 +77,7 @@ def initial_model_load(model):
     if lowvram_mode:
         model.model.half()
     else:
-        model.cuda()
+        model.to(self.device)
     return model
 
 
@@ -499,7 +499,7 @@ def load_img(
 
 
 def get_init_img(batch_size=1, key=None):
-    init_image = load_img(key=key).cuda()
+    init_image = load_img(key=key).to(self.device)
     init_image = repeat(init_image, "1 ... -> b ...", b=batch_size)
     return init_image
 
@@ -783,7 +783,7 @@ def do_img2img(
 
                 noise = torch.randn_like(z)
 
-                sigmas = sampler.discretization(sampler.num_steps).cuda()
+                sigmas = sampler.discretization(sampler.num_steps).to(self.device)
                 sigma = sigmas[0]
 
                 st.info(f"all sigmas: {sigmas}")
@@ -793,7 +793,7 @@ def do_img2img(
                         torch.randn(z.shape[0], device=z.device), z.ndim
                     )
                 if add_noise:
-                    noised_z = z + noise * append_dims(sigma, z.ndim).cuda()
+                    noised_z = z + noise * append_dims(sigma, z.ndim).to(self.device)
                     noised_z = noised_z / torch.sqrt(
                         1.0 + sigmas[0] ** 2.0
                     )  # Note: hardcoded to DDPM-like scaling. need to generalize later.
