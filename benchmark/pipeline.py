@@ -26,7 +26,14 @@ from vendor.vine.src.quality_metrics_wbench import (
 from vendor.vine.w_bench_utils import Attacker
 
 
-def run_config(n_samples, msg, attack: tuple, device: str, loss_fn_alex):
+def run_config(
+    n_samples,
+    msg,
+    attack: tuple,
+    device: str,
+    loss_fn_alex,
+    attacker,
+):
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
 
     # m_name, method = "InvisibleWM (DWT-DCT-SVD)", Method_DWTDCTSVD(msg)
@@ -62,7 +69,6 @@ def run_config(n_samples, msg, attack: tuple, device: str, loss_fn_alex):
             continue
         attacked_img = watermarked
         if attack:
-            attacker = Attacker()
             attacked_img = getattr(attacker, attack[0])(attacked_img, **attack[1])
         try:
             # original & attacked are PIL RGB → convert to BGR NumPy arrays
@@ -275,6 +281,7 @@ def run_benchmark():
                 attack=attack,
                 device=DEVICE,
                 loss_fn_alex=loss_fn_alex,
+                attacker=attacker,
             )
             results.append(
                 {
