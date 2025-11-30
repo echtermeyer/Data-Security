@@ -20,25 +20,33 @@ function Landing() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 lg:py-24">
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-cyan-400 via-blue-400 to-sky-500 bg-clip-text text-transparent pb-2">
-              Image Watermarking & Robustness
+              Secure Image Ownership & Watermarking
             </h1>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-6 sm:mb-8 max-w-3xl mx-auto px-2">
-              Safeguarding content authenticity in the era of AI-generated
-              images
+              Claim cryptographic ownership of your images and test watermark
+              resilience against real-world attacks
             </p>
             <div className="flex flex-col gap-3 sm:gap-4 justify-center mb-6 max-w-md sm:max-w-fit mx-auto">
               <Link
-                to="/challenge"
-                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg hover:shadow-cyan-500/50 transform hover:scale-[1.02]"
+                to="/ownership"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:from-emerald-500 hover:to-cyan-500 transition-all shadow-lg hover:shadow-emerald-500/50 transform hover:scale-[1.02]"
               >
-                Try Challenge Mode
+                🔐 Claim Ownership
               </Link>
-              <Link
-                to="/benchmark"
-                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-sky-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:from-blue-500 hover:to-sky-500 transition-all shadow-lg hover:shadow-blue-500/50 transform hover:scale-[1.02]"
-              >
-                Run Benchmark
-              </Link>
+              <div className="grid grid-cols-2 gap-3">
+                <Link
+                  to="/challenge"
+                  className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg hover:shadow-cyan-500/50 transform hover:scale-[1.02]"
+                >
+                  Try Challenge
+                </Link>
+                <Link
+                  to="/benchmark"
+                  className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-sky-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:from-blue-500 hover:to-sky-500 transition-all shadow-lg hover:shadow-blue-500/50 transform hover:scale-[1.02]"
+                >
+                  Run Benchmark
+                </Link>
+              </div>
               <a
                 href="#"
                 className="inline-flex items-center justify-center gap-2 bg-white/20 backdrop-blur-md text-white px-6 sm:px-8 py-2.5 rounded-xl text-sm font-medium hover:bg-white/30 transition-all border border-cyan-400/30 hover:border-cyan-400/50 shadow-lg"
@@ -56,7 +64,7 @@ function Landing() {
         <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
           <div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-600 bg-clip-text text-transparent mb-4 sm:mb-6">
-              What is Digital Watermarking?
+              Digital Watermarking & Ownership
             </h2>
             <p className="text-base sm:text-lg text-slate-700 mb-3 sm:mb-4">
               Digital watermarking embeds invisible information directly into
@@ -66,11 +74,17 @@ function Landing() {
               for content attribution.
             </p>
             <p className="text-base sm:text-lg text-slate-700 mb-3 sm:mb-4">
-              Unlike metadata that can be easily stripped, watermarks are
-              embedded within the pixel data itself, making them more resistant
-              to tampering and removal.
+              Our platform goes beyond simple watermarking by implementing{" "}
+              <strong>cryptographic ownership claims</strong> - using public-key
+              cryptography to create mathematically verifiable proof of
+              authorship that cannot be forged or disputed.
             </p>
             <div className="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8">
+              <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-emerald-50 to-cyan-50 border border-emerald-200 rounded-lg">
+                <span className="font-semibold text-sm sm:text-base text-slate-800">
+                  Ownership
+                </span>
+              </div>
               <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-200 rounded-lg">
                 <span className="font-semibold text-sm sm:text-base text-slate-800">
                   Authenticity
@@ -262,6 +276,133 @@ function Landing() {
         </div>
       </section>
 
+      {/* Ownership Claims Feature - NEW */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className="bg-gradient-to-br from-emerald-50 via-cyan-50 to-blue-50 rounded-2xl shadow-2xl overflow-hidden border-2 border-emerald-200">
+          <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
+            <div className="p-6 sm:p-8 lg:p-12">
+              <div className="inline-flex items-center gap-2 bg-emerald-100 px-3 py-1 rounded-full mb-4">
+                <span className="text-emerald-700 font-semibold text-xs sm:text-sm">
+                  ✨ NEW FEATURE
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-emerald-600 via-cyan-600 to-blue-600 bg-clip-text text-transparent mb-4 sm:mb-6">
+                Cryptographic Ownership Claims
+              </h2>
+              <p className="text-base sm:text-lg text-slate-700 mb-4">
+                Prove you created an image with mathematically verifiable
+                cryptographic signatures. Unlike simple watermarks that can be
+                forged, ownership claims use public-key cryptography to create
+                unfalsifiable proof of authorship.
+              </p>
+              <ul className="space-y-3 mb-6 sm:mb-8 text-sm sm:text-base text-slate-700">
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-600 text-lg sm:text-xl mt-0.5">
+                    ✓
+                  </span>
+                  <span>
+                    <strong>Digital signatures:</strong> Cryptographically sign
+                    your images with RSA-2048
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-600 text-lg sm:text-xl mt-0.5">
+                    ✓
+                  </span>
+                  <span>
+                    <strong>Verifiable proof:</strong> Anyone can verify
+                    ownership without your private key
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-600 text-lg sm:text-xl mt-0.5">
+                    ✓
+                  </span>
+                  <span>
+                    <strong>Timestamped claims:</strong> Prove you had the image
+                    at a specific date and time
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-600 text-lg sm:text-xl mt-0.5">
+                    ✓
+                  </span>
+                  <span>
+                    <strong>Tamper detection:</strong> Detect if an image has
+                    been modified since signing
+                  </span>
+                </li>
+              </ul>
+              <Link
+                to="/ownership"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-cyan-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:from-emerald-500 hover:to-cyan-500 transition-all shadow-lg hover:shadow-emerald-500/50 w-full sm:w-auto transform hover:scale-[1.02]"
+              >
+                Start Claiming Ownership →
+              </Link>
+            </div>
+            <div className="relative p-6 sm:p-8 lg:p-12 bg-gradient-to-br from-slate-800 to-slate-900">
+              <div className="relative">
+                {/* Mock certificate/proof visualization */}
+                <div className="bg-white rounded-lg shadow-2xl p-4 sm:p-6 transform rotate-1 hover:rotate-0 transition-transform">
+                  <div className="flex items-center gap-3 mb-4 pb-3 border-b-2 border-emerald-200">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-lg sm:text-xl">✓</span>
+                    </div>
+                    <div>
+                      <p className="text-xs sm:text-sm text-slate-600 font-semibold">
+                        OWNERSHIP VERIFIED
+                      </p>
+                      <p className="text-sm sm:text-base font-bold text-slate-900">
+                        Cryptographic Proof
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-xs text-slate-500">Author</p>
+                      <p className="text-sm sm:text-base font-semibold text-slate-900">
+                        Your Name
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500">Claimed At</p>
+                      <p className="text-xs sm:text-sm font-mono text-slate-700">
+                        {new Date().toLocaleString()}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500">Signature</p>
+                      <div className="bg-slate-100 rounded px-2 py-1 mt-1">
+                        <p className="text-xs font-mono text-slate-600 truncate">
+                          SHA256:a3f7b2c9d1e8...
+                        </p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-200">
+                      <div className="text-center">
+                        <p className="text-xs text-slate-500">Signature</p>
+                        <p className="text-lg sm:text-xl text-emerald-600">✓</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs text-slate-500">Key</p>
+                        <p className="text-lg sm:text-xl text-emerald-600">✓</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xs text-slate-500">Integrity</p>
+                        <p className="text-lg sm:text-xl text-emerald-600">✓</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* Decorative elements */}
+                <div className="absolute -top-2 -right-2 w-16 h-16 sm:w-20 sm:h-20 bg-emerald-400/20 rounded-full blur-xl"></div>
+                <div className="absolute -bottom-2 -left-2 w-20 h-20 sm:w-24 sm:h-24 bg-cyan-400/20 rounded-full blur-xl"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Interactive Modes Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-600 bg-clip-text text-transparent text-center mb-8 sm:mb-12">
@@ -312,7 +453,7 @@ function Landing() {
             <p className="text-sm sm:text-base lg:text-lg text-slate-700 mb-4 sm:mb-6">
               Compare watermarking algorithms side-by-side. Analyze
               imperceptibility metrics, embedding efficiency, and extraction
-              accuracy across multiple techniques.
+              accuracy across multiple techniques. Find the best algorithm now!
             </p>
             <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8 text-sm sm:text-base text-slate-700">
               <li className="flex items-start gap-2">

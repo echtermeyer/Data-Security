@@ -19,6 +19,12 @@ function Navigation() {
           {/* Desktop Navigation */}
           <div className="hidden sm:flex gap-2">
             <Link
+              to="/ownership"
+              className="px-3 sm:px-4 py-2 text-sm sm:text-base text-slate-200 hover:text-white hover:bg-blue-900/30 rounded-lg transition-all font-medium"
+            >
+              Ownership
+            </Link>
+            <Link
               to="/challenge"
               className="px-3 sm:px-4 py-2 text-sm sm:text-base text-slate-200 hover:text-white hover:bg-blue-900/30 rounded-lg transition-all font-medium"
             >
@@ -59,6 +65,13 @@ function Navigation() {
         {/* Mobile Navigation Menu */}
         {isMenuOpen && (
           <div className="sm:hidden border-t border-blue-900/30 py-2">
+            <Link
+              to="/ownership"
+              className="block px-4 py-2.5 text-slate-200 hover:text-white hover:bg-blue-900/30 rounded-lg transition-all font-medium"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Ownership
+            </Link>
             <Link
               to="/challenge"
               className="block px-4 py-2.5 text-slate-200 hover:text-white hover:bg-blue-900/30 rounded-lg transition-all font-medium"
