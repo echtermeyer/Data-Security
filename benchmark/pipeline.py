@@ -213,11 +213,11 @@ def run_benchmark():
         ("attack_crop", {"crop_size": 0.4}),
         ("attack_crop", {"crop_size": 0.2}),
         # --- Regeneration Attacks (Diffusion - Noise Step) ---
-        ("attack_diffusion", {"noise_step": 20, "prompt": ""}),
-        ("attack_diffusion", {"noise_step": 40, "prompt": ""}),
-        ("attack_diffusion", {"noise_step": 60, "prompt": ""}),
-        ("attack_diffusion", {"noise_step": 80, "prompt": ""}),
-        ("attack_diffusion", {"noise_step": 100, "prompt": ""}),
+        # ("attack_diffusion", {"noise_step": 20, "prompt": ""}),
+        # ("attack_diffusion", {"noise_step": 40, "prompt": ""}),
+        # ("attack_diffusion", {"noise_step": 60, "prompt": ""}),
+        # ("attack_diffusion", {"noise_step": 80, "prompt": ""}),
+        # ("attack_diffusion", {"noise_step": 100, "prompt": ""}),
         # # --- Global Editing (InstructPix2Pix) ---
         # (
         #     "attack_global_edit_instructpix2pix",
