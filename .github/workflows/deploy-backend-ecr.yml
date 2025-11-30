@@ -1,4 +1,4 @@
-name: Deploy Backend Image to ECR
+name: Deploy Backend Image to ECR and Update ECS Service
 
 on:
   workflow_dispatch:
@@ -12,6 +12,8 @@ env:
   AWS_REGION: eu-central-1
   ECR_REPOSITORY: watermarking-backend-repo
   AWS_ACCOUNT_ID: 995423076159
+  ECS_CLUSTER_NAME: Watermark-Fargate-Cluster
+  ECS_SERVICE_NAME: Watermarking-API-Service
 
 jobs:
   build-and-push:
@@ -47,3 +49,17 @@ jobs:
           
           # 3. Push the image to ECR
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Update ECS Service
+        run: |
+          # Forces a new deployment by setting the 'force-new-deployment' flag to true.
+          aws ecs update-service \
+            --cluster ${{ env.ECS_CLUSTER_NAME }} \
+            --service ${{ env.ECS_SERVICE_NAME }} \
+            --force-new-deployment
+            
+          # Wait for the service to stabilize (optional but recommended)
+          echo "Waiting for ECS service to stabilize..."
+          aws ecs wait services-stable \
+            --cluster ${{ env.ECS_CLUSTER_NAME }} \
+            --services ${{ env.ECS_SERVICE_NAME }}
