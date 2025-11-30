@@ -38,29 +38,40 @@ function ChallengeMode() {
       id: "lsb",
       name: "LSB",
       fullName: "Least Significant Bit",
-      robustness: 1,
+      robustness: 1, // Lowest robustness (basic spatial technique)
       description: "Basic spatial domain technique for fast embedding.",
     },
     {
       id: "dctdwt",
       name: "DCT-DWT",
       fullName: "Discrete Cosine/Wavelet Transform Hybrid",
-      robustness: 3,
-      description: "Hybrid frequency domain approach combining DCT and DWT for better robustness.",
+      robustness: 2, // High robustness (transform domain hybrid)
+      description:
+        "Hybrid frequency domain approach combining DCT and DWT for better robustness.",
+    },
+    {
+      id: "dctdwtsvd",
+      name: "DCT-DWT-SVD",
+      fullName: "DCT-DWT-Singular Value Decomposition",
+      robustness: 3, // Very high robustness (Advanced transform domain with linear algebra)
+      description:
+        "High-robustness transform domain approach using DWT for decomposition, DCT on sub-bands, and SVD for embedding/extraction.",
     },
     {
       id: "mbrs",
       name: "MBRS",
       fullName: "Mini-Batch Real & Simulated JPEG",
-      robustness: 4,
-      description: "Deep Neural Network (DNN) based method for watermarking, highly robust against JPEG compression.",
+      robustness: 4, // Very high robustness (DNN-based with attack simulation)
+      description:
+        "Deep Neural Network (DNN) based method for watermarking, highly robust against JPEG compression.",
     },
     {
       id: "vine",
       name: "VINE",
       fullName: "Generative Prior Watermarking",
-      robustness: 5, 
-      description: "Advanced watermarking method using generative priors to enhance robustness against complex image editing.",
+      robustness: 5, // Very high robustness (Generative model-based against various edits)
+      description:
+        "Advanced watermarking method using generative priors to enhance robustness against complex image editing.",
     },
   ];
 
@@ -170,13 +181,7 @@ function ChallengeMode() {
   };
 
   useEffect(() => {
-    if (
-      !watermarkedImage ||
-      status === "idle" ||
-      status === "error" ||
-      status === "verified"
-    )
-      return;
+    if (!watermarkedImage || status === "idle" || status === "error") return;
 
     const img = new Image();
     img.onload = () => {
@@ -255,7 +260,10 @@ function ChallengeMode() {
       );
       setAttackedImage(newAttackedImage);
 
-      setStatus("attacking");
+      // Only change status to "attacking" if not already verified
+      if (status !== "verified") {
+        setStatus("attacking");
+      }
       const attacks =
         [brightness, blur, noise, rotation, cropAmount].filter((v) => v !== 0)
           .length + (compression < 100 ? 1 : 0);
@@ -275,10 +283,11 @@ function ChallengeMode() {
   ]);
 
   const handleExtract = async () => {
-    if (!attackedImage || status !== "attacking") return;
+    if (!attackedImage) return;
 
     setIsLoading(true);
     setExtractedMessage(null);
+    setStatus("attacking");
 
     try {
       const attackedImageBase64 = attackedImage.split(",")[1];
@@ -298,27 +307,7 @@ function ChallengeMode() {
 
       const data = await response.json();
 
-      const damageScore =
-        Math.abs(brightness) / 100 +
-        blur / 20 +
-        noise / 100 +
-        Math.abs(rotation) / 180 +
-        cropAmount / 50 +
-        (100 - compression) / 100;
-
-      const algoRobustness =
-        algorithms.find((a) => a.id === algorithm)?.robustness || 1;
-      const survivalChance = Math.max(
-        0,
-        1 - damageScore / (algoRobustness * 2)
-      );
-
-      const survived = Math.random() < survivalChance;
-      const extractedMsgFinal = survived
-        ? message
-        : data.message || "(Failed extraction)";
-
-      setExtractedMessage(extractedMsgFinal);
+      setExtractedMessage(data.message || "(Failed extraction)");
       setStatus("verified");
     } catch (error) {
       console.error("Extraction failed:", error);
@@ -334,26 +323,26 @@ function ChallengeMode() {
 
   const applyQuickAttack = (preset) => {
     if (preset === "light") {
-      setBrightness(10);
+      setBrightness(3);
+      setBlur(1);
+      setNoise(2);
+      setRotation(2);
+      setCompression(95);
+      setCropAmount(2);
+    } else if (preset === "heavy") {
+      setBrightness(8);
       setBlur(2);
       setNoise(5);
       setRotation(5);
-      setCompression(90);
+      setCompression(85);
       setCropAmount(5);
-    } else if (preset === "heavy") {
-      setBrightness(30);
-      setBlur(8);
-      setNoise(20);
-      setRotation(15);
-      setCompression(70);
-      setCropAmount(15);
     } else if (preset === "extreme") {
-      setBrightness(50);
-      setBlur(15);
-      setNoise(40);
-      setRotation(45);
-      setCompression(50);
-      setCropAmount(25);
+      setBrightness(15);
+      setBlur(4);
+      setNoise(12);
+      setRotation(10);
+      setCompression(75);
+      setCropAmount(8);
     }
   };
 
@@ -531,16 +520,17 @@ function ChallengeMode() {
               placeholder="Enter the message to be embedded as a watermark. This payload will be used for extraction verification after attack simulation."
               className="w-full border-2 border-slate-200 rounded-lg p-2.5 sm:p-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 resize-none text-xs sm:text-sm transition-all"
               rows="6"
+              maxLength={30}
             />
             <div className="mt-2 flex justify-between items-center">
               <p className="text-xs text-slate-500">
-                {message.length} characters
+                {message.length}/30 characters
               </p>
               <div className="h-1.5 w-20 sm:w-24 bg-slate-200 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-300"
                   style={{
-                    width: `${Math.min(100, (message.length / 200) * 100)}%`,
+                    width: `${Math.min(100, (message.length / 30) * 100)}%`,
                   }}
                 ></div>
               </div>
@@ -785,8 +775,8 @@ function ChallengeMode() {
                     </label>
                     <input
                       type="range"
-                      min="-100"
-                      max="100"
+                      min="-20"
+                      max="20"
                       value={brightness}
                       onChange={(e) => setBrightness(parseInt(e.target.value))}
                       className="w-full h-2 sm:h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
@@ -806,7 +796,7 @@ function ChallengeMode() {
                     <input
                       type="range"
                       min="0"
-                      max="20"
+                      max="5"
                       value={blur}
                       onChange={(e) => setBlur(parseInt(e.target.value))}
                       className="w-full h-2 sm:h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
@@ -826,7 +816,7 @@ function ChallengeMode() {
                     <input
                       type="range"
                       min="0"
-                      max="100"
+                      max="20"
                       value={noise}
                       onChange={(e) => setNoise(parseInt(e.target.value))}
                       className="w-full h-2 sm:h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
@@ -845,8 +835,8 @@ function ChallengeMode() {
                     </label>
                     <input
                       type="range"
-                      min="-180"
-                      max="180"
+                      min="-15"
+                      max="15"
                       value={rotation}
                       onChange={(e) => setRotation(parseInt(e.target.value))}
                       className="w-full h-2 sm:h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
@@ -865,7 +855,7 @@ function ChallengeMode() {
                     </label>
                     <input
                       type="range"
-                      min="10"
+                      min="70"
                       max="100"
                       value={compression}
                       onChange={(e) => setCompression(parseInt(e.target.value))}
@@ -886,7 +876,7 @@ function ChallengeMode() {
                     <input
                       type="range"
                       min="0"
-                      max="50"
+                      max="10"
                       value={cropAmount}
                       onChange={(e) => setCropAmount(parseInt(e.target.value))}
                       className="w-full h-2 sm:h-2.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-cyan-600"
@@ -927,7 +917,11 @@ function ChallengeMode() {
                   disabled={isLoading || status === "embedded"}
                   className="w-full mt-4 sm:mt-6 bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base hover:from-cyan-500 hover:to-blue-500 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-cyan-500/50 transform hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  {isLoading ? "Extracting Watermark..." : "Extract Watermark"}
+                  {isLoading
+                    ? "Extracting Watermark..."
+                    : status === "verified"
+                    ? "Re-extract Watermark"
+                    : "Extract Watermark"}
                 </button>
               </div>
             </div>
