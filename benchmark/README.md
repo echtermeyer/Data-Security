@@ -26,8 +26,7 @@ How to use this for the Deep Methods
 | **Spatial** | **LSB** | Least Significant Bit | **The "Zero Robustness" Baseline.** Simple pixel-level embedding. Serves as a control to show how easily fragile watermarks are destroyed. | 🟢 Very High (CPU/Instant) | [GitHub (stego-lsb)](https://github.com/ragibson/Steganography) |
 | **Spatial** | **RAW** | RAW: Robust & Agile Watermark | **Modern Pixel-Level (Deep).** Learns a direct, zero-bit detectable pattern on the pixels. Robust to diffusion regeneration. | 🟡 Medium (PyTorch/MPS required for inference) | [GitHub (Official)](https://github.com/jeremyxianx/RAWatermark) |
 | **Deep Learning** | **MBRS** | Mini-Batch of Real & Simulated JPEG | **Compression Robustness SOTA.** Trained specifically to survive heavy JPEG compression and noise attacks. | 🟢 Low-Medium (PyTorch/MPS recommended) | [GitHub (jzyustc/MBRS)](https://github.com/jzyustc/MBRS) |
-| **Deep Learning** | **StegaStamp** | Physical-robust DNN watermark | **Distortion Robustness SOTA.** The gold standard for resistance against physical attacks (print-to-camera, rotation, cropping). | 🟡 Medium (Needs working PyTorch port/MPS) | [PyTorch Port (Example)](https://github.com/JisongXie/StegaStamp_pytorch) |
-| **Deep Learning** | *(Optional) HiDDeN* | Classic encoder-decoder neural watermark | **Speed/Lightweight Baseline.** The foundational end-to-end neural watermark. Fast inference and a good deep learning lower bound. | 🟢 Low (PyTorch/MPS recommended) | [GitHub (ando-kh/HiDDeN)](https://github.com/ando-kh/HiDDeN) |
+| **Deep Learning** | **VINE** | Variational Inference for Non-Parametric Image Editing (VINE) | **Robustness Benchmark / Restoration.** Uses diffusion priors (SDXL VAE) to **restore** watermarks from heavily edited images. | 🟡 Medium (Requires `diffusers` VAE, feasible on MPS for inference) | [GitHub (Shilin-LU/VINE)](https://github.com/Shilin-LU/VINE) |
 
 ### Include MBRS
 
