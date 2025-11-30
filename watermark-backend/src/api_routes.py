@@ -42,6 +42,7 @@ from .vendor.dwtdct import Method_DWTDCT
 from .vendor.mbrs import Method_MBRS
 from .vendor.vine import Method_VINE
 
+DwtDct = Method_DWTDCT()
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 Mbrs = Method_MBRS(device)
 Vine = Method_VINE(device)
@@ -92,7 +93,6 @@ async def embed_watermark_endpoint(request: EmbedRequest):
         if request.algorithm == "lsb":
             wm_image = Lsb.encode(pil_img, request.message)
         elif request.algorithm == "dctdwt":
-            DwtDct = Method_DWTDCT(request.message)
             wm_image = DwtDct.encode(pil_img, request.message)
         elif request.algorithm == "mbrs":
             wm_image = Mbrs.encode(pil_img, request.message)
@@ -124,7 +124,6 @@ async def extract_watermark_endpoint(request: ExtractRequest):
         if request.algorithm == "lsb":
             msg = Lsb.decode(pil_img)
         elif request.algorithm == "dctdwt":
-            DwtDct = Method_DWTDCT(request.message)
             msg = DwtDct.decode(pil_img)
         elif request.algorithm == "mbrs":
             msg = Mbrs.decode(pil_img)

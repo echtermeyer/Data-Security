@@ -6,14 +6,19 @@ import numpy as np
 
 
 class Method_DWTDCT(MethodBase):
-    def __init__(self, msg):
+    def __init__(self, max_msg_len=32):
         self.enc = WatermarkEncoder()
-        self.bits_len = 8 * len(msg)
+        self.bits_len = 8 * max_msg_len
         self.dec = WatermarkDecoder("bytes", self.bits_len)
         self.scale = [0, 200, 200]
         self.block = 8
 
     def encode(self, img_pil, msg):
+        required_len = self.bits_len // 8
+        if len(msg) < required_len:
+            msg = msg.ljust(required_len, "\x00")
+        elif len(msg) > required_len:
+            msg = msg[:required_len]
         img_bgr = cv2.cvtColor(np.array(img_pil.convert("RGB")), cv2.COLOR_RGB2BGR)
         self.enc.set_watermark("bytes", msg.encode("utf-8"))
         wm_bgr = self.enc.encode(img_bgr, "dwtDct", scales=self.scale, block=self.block)
@@ -27,7 +32,8 @@ class Method_DWTDCT(MethodBase):
         )
 
         try:
-            return wm_bytes.decode("utf-8", errors="ignore")
+            decoded_str = wm_bytes.decode("utf-8", errors="ignore")
+            return decoded_str.rstrip("\x00")
         except:
             return wm_bytes
 
