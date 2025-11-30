@@ -6,6 +6,8 @@ from torchvision import transforms
 import matplotlib.pyplot as plt
 from difflib import SequenceMatcher
 import json
+import time
+import numpy as np
 
 
 from vendor.mbrs import Method_MBRS
@@ -40,57 +42,59 @@ from vendor.vine.w_bench_utils import Attacker
 
 def run_config(n_samples, msg, attacks: list[tuple], device: str):
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
-    methods = {
-        # "InvisibleWM (DWT-DCT-SVD)": Method_DWTDCTSVD(msg),
-        # "LSB": Method_LSB(),
-        # "LSB Robust": Method_LSB_Robust(),
-        # "MBRS": Method_MBRS(device),
-        "InvisibleWM (DWT-DCT)": Method_DWTDCT(msg),
-        # "RAW": Method_RAW(),
-        # "VINE": Method_VINE(device),
-    }
 
-    results = {m: {"Match": 0.0, "Total": 0} for m in methods}
+    m_name, method = "InvisibleWM (DWT-DCT-SVD)", Method_DWTDCTSVD(msg)
+    m_name, method = "InvisibleWM (DWT-DCT)", Method_DWTDCT(msg)
+    m_name, method = "LSB", Method_LSB()
+    m_name, method = "LSB Robust", Method_LSB_Robust()
+    m_name, method = "MBRS", Method_MBRS(device)
+    m_name, method = "RAW", Method_RAW()
+    m_name, method = "MVINEBRS", Method_VINE(device)
 
     print(f"{'Method':<30} | {'Attack':<15} | {'Decoded'} | {'Success?'}")
     print("-" * 80)
-
+    start_time = time.perf_counter()
     count = 0
+
+    score = list()
     for sample in dataset:
         if count >= n_samples:
             break
 
         original = sample["image"].convert("RGB").resize((512, 512))
 
-        for m_name, method in methods.items():
-            try:
-                watermarked = method.encode(original, msg)
-            except Exception as e:
-                print(f"{m_name:<30} | {'EmbedError':<15} | {e} | False")
-                continue
-            attacked_img = watermarked
-            if attacks:
-                attacker = Attacker()
-                for attack, kwargs in attacks:
-                    attacked_img = getattr(attacker, attack)(attacked_img, **kwargs)
-            decoded_msg = method.decode(attacked_img)
-            if isinstance(decoded_msg, bytes):
-                decoded_msg = decoded_msg.decode("utf-8", errors="ignore")
+        try:
+            watermarked = method.encode(original, msg)
+        except Exception as e:
+            print(f"{m_name:<30} | {'EmbedError':<15} | {e} | False")
+            continue
+        attacked_img = watermarked
+        if attacks:
+            attacker = Attacker()
+            for attack, kwargs in attacks:
+                attacked_img = getattr(attacker, attack)(attacked_img, **kwargs)
+        decoded_msg = method.decode(attacked_img)
+        if isinstance(decoded_msg, bytes):
+            decoded_msg = decoded_msg.decode("utf-8", errors="ignore")
 
-            # TODO: get success rate (e.g. fuzzy matching)
-            if isinstance(decoded_msg, str):
-                match_rate = SequenceMatcher(None, msg, decoded_msg).ratio()
-            else:  # in case of non-str return
-                match_rate = decoded_msg
-            print(f"{m_name:<30} | {'JPEG(50)':<15} | {repr(match_rate):<20}")
+        # TODO: get success rate (e.g. fuzzy matching)
+        if isinstance(decoded_msg, str):
+            match_rate = SequenceMatcher(None, msg, decoded_msg).ratio()
+        else:  # in case of non-str return
+            match_rate = decoded_msg
+        print(f"{m_name:<30} | {str(attacks):<15} | {repr(match_rate):<20}")
 
-            results[m_name]["Match"] += match_rate
-            results[m_name]["Total"] += 1
+        score.append(match_rate)
 
         count += 1
-    final_results = {}
-    for m_name, res in results.items():
-        final_results[m_name] = res["Match"] / res["Total"] if res["Total"] > 0 else 0.0
+    end_time = time.perf_counter()
+    elapsed_time = end_time - start_time
+    np_res = np.array(score)
+    final_results = {
+        "avg_match_rate": float(np.mean(np_res)),
+        "std_match_rate": float(np.std(np_res)),
+        "time_per_image_sec": elapsed_time / len(score),
+    }
     return final_results
 
 
@@ -99,21 +103,21 @@ def run_benchmark():
     W_BENCH_SUBSET_SIZE = 5
 
     attacks = [
-        [("attack_jpeg", {"quality": 10})],
-        [("attack_jpeg", {"quality": 20})],
-        [("attack_jpeg", {"quality": 30})],
-        [("attack_jpeg", {"quality": 40})],
-        [("attack_jpeg", {"quality": 50})],
-        [("attack_jpeg", {"quality": 60})],
-        [("attack_jpeg", {"quality": 70})],
-        [("attack_jpeg", {"quality": 80})],
+        # [("attack_jpeg", {"quality": 10})],
+        # [("attack_jpeg", {"quality": 20})],
+        # [("attack_jpeg", {"quality": 30})],
+        # [("attack_jpeg", {"quality": 40})],
+        # [("attack_jpeg", {"quality": 50})],
+        # [("attack_jpeg", {"quality": 60})],
+        # [("attack_jpeg", {"quality": 70})],
+        # [("attack_jpeg", {"quality": 80})],
         [("attack_jpeg", {"quality": 90})],
         [],
     ]
     messages = [
-        "Hi",  # len 2
-        "Carl",  # len 4
-        "Tubingen",  # len 8
+        # "Hi",  # len 2
+        # "Carl",  # len 4
+        # "Tubingen",  # len 8
         "CanYouSeeMeHere",  # len 16
     ]
     restults = []
