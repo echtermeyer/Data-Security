@@ -1,10 +1,13 @@
 from vendor import MethodBase
+import torch
+from torchvision.transforms.functional import to_tensor, to_pil_image
+from vendor.raw.scripts import raw
 
 
 class Method_RAW(MethodBase):
     def __init__(self):
-        watermark_encoder = VINE_Turbo.from_pretrained(args.pretrained_model_name)
-        watermark_encoder.to(device)
+        self.device = "mps" if torch.cuda.is_available() else "cpu"
+        self.RAW = raw.RAWatermark(device=self.device, wm_index=0)
 
     def encode(self, img_pil, msg):
         img = to_tensor(img_pil).unsqueeze(0).to(self.device)
