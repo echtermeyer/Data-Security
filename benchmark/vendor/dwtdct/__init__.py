@@ -6,7 +6,7 @@ import numpy as np
 
 
 class Method_DWTDCT(MethodBase):
-    def __init__(self, max_msg_len=32):
+    def __init__(self, max_msg_len: int = 32):
         self.enc = WatermarkEncoder()
         self.bits_len = 8 * max_msg_len
         self.dec = WatermarkDecoder("bytes", self.bits_len)

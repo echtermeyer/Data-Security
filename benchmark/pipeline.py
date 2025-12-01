@@ -34,7 +34,7 @@ def run_config(
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
 
     # m_name, method = "DWT-DCT-SVD", Method_DWTDCTSVD(msg)
-    m_name, method = "DWT-DCT", Method_DWTDCT(msg)
+    m_name, method = "DWT-DCT", Method_DWTDCT(len(msg))
     # m_name, method = "LSB", Method_LSB()
     # m_name, method = "LSB Robust", Method_LSB_Robust()
     # m_name, method = "MBRS", Method_MBRS(device)
@@ -288,7 +288,7 @@ def run_benchmark():
                     "results": result,
                 }
             )
-    file_name = f"{results[0]['results']['m_name']}_benchmark_results.json"
+    file_name = f"./results/{results[0]['results']['m_name']}_benchmark_results.json"
     with open(file_name, "w") as f:
         json.dump(results, f, indent=4)
     print(f"Benchmark results saved to {file_name}")
