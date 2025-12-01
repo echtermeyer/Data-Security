@@ -46,7 +46,7 @@ DwtDct = Method_DWTDCT()
 DwtDctScd = Method_DWTDCTSVD()
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 Mbrs = Method_MBRS(device)
-Vine = Method_VINE(device)
+Vine = None # Method_VINE(device)
 Lsb = Method_LSB()
 
 
