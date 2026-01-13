@@ -34,11 +34,11 @@ def run_config(
     dataset = load_dataset("Shilin-LU/W-Bench", split="train", streaming=True)
 
     # m_name, method = "DWT-DCT-SVD", Method_DWTDCTSVD(msg)
-    m_name, method = "DWT-DCT", Method_DWTDCT(len(msg))
+    # m_name, method = "DWT-DCT", Method_DWTDCT(len(msg))
     # m_name, method = "LSB", Method_LSB()
     # m_name, method = "LSB Robust", Method_LSB_Robust()
     # m_name, method = "MBRS", Method_MBRS(device)
-    # m_name, method = "RAW", Method_RAW()
+    m_name, method = "RAW", Method_RAW()
     # m_name, method = "MVINEBRS", Method_VINE(device)
 
     # print(f"{'Method':<30} | {'Attack':<15} | {'Decoded'} | {'Success?'}")
