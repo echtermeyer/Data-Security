@@ -35,11 +35,11 @@ def run_config(
 
     # m_name, method = "DWT-DCT-SVD", Method_DWTDCTSVD(msg)
     # m_name, method = "DWT-DCT", Method_DWTDCT(len(msg))
-    # m_name, method = "LSB", Method_LSB()
+    # # m_name, method = "LSB", Method_LSB()
     # m_name, method = "LSB Robust", Method_LSB_Robust()
     # m_name, method = "MBRS", Method_MBRS(device)
-    m_name, method = "RAW", Method_RAW()
-    # m_name, method = "MVINEBRS", Method_VINE(device)
+    # m_name, method = "RAW", Method_RAW()
+    m_name, method = "MVINEBRS", Method_VINE(device)
 
     # print(f"{'Method':<30} | {'Attack':<15} | {'Decoded'} | {'Success?'}")
     # print("-" * 80)
@@ -67,10 +67,13 @@ def run_config(
         attacked_img = watermarked
         if attack:
             attacked_img = getattr(attacker, attack[0])(attacked_img, **attack[1])
+            # Debug the image sizes BEFORE computing metrics
+            
         try:
             # original & attacked are PIL RGB → convert to BGR NumPy arrays
             decoded_cv = cv2.cvtColor(np.array(attacked_img), cv2.COLOR_RGB2BGR)
             original_cv = cv2.cvtColor(np.array(original), cv2.COLOR_RGB2BGR)
+
 
             psnr_val, ssim_val = compute_psnr_ssim(decoded_cv, original_cv)
             lpips_val = compute_lpips(decoded_cv, original_cv, loss_fn_alex, device)
@@ -266,7 +269,7 @@ def run_benchmark():
         "Carl",  # len 4
         "Tubingen",  # len 8
         "CanYouSeeMeHere",  # len 16
-        "HowCoolIsWaterBench?LikeyCooool!",  # len 32
+        "HowCoolIsWaterBench?LikeyCooool",  # len 32
     ]
     results = []
     for msg in messages:

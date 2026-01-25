@@ -148,6 +148,7 @@ class Method_MBRS(MethodBase):
 
         out = out.clamp(0.0, 1.0).squeeze(0).cpu()
         wm_pil = self.to_pil(out)
+        wm_pil = wm_pil.resize(img_pil.size, Image.LANCZOS)
         return wm_pil
 
     def decode(self, img_pil: Image.Image) -> str:
