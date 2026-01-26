@@ -54,9 +54,9 @@ Data-Security/
 
 The benchmark evaluates all methods against multiple attack categories:
 
-- **Distortion**: Brightness, Contrast, Blur, Noise, JPEG Compression
+- **Distortion**: Brightness, Contrast, Blur, Noise,
 - **Geometric**: Rotation, Scaling, Cropping
-- **Generative**: Diffusion regeneration, Image editing (InstructPix2Pix, UltraEdit)
+- **Compression**: JPEG quality compression
 
 ### Robustness Comparison
 
