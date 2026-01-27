@@ -166,4 +166,4 @@ The app will be available at `http://localhost:5174`.
 
 ## License
 
-This project is for research and educational purposes.
+This project is for research and educational purposes. Check the [LICENSE](LICENSE) for more information.
