@@ -68,12 +68,11 @@ def run_config(
         if attack:
             attacked_img = getattr(attacker, attack[0])(attacked_img, **attack[1])
             # Debug the image sizes BEFORE computing metrics
-            
+
         try:
             # original & attacked are PIL RGB → convert to BGR NumPy arrays
             decoded_cv = cv2.cvtColor(np.array(attacked_img), cv2.COLOR_RGB2BGR)
             original_cv = cv2.cvtColor(np.array(original), cv2.COLOR_RGB2BGR)
-
 
             psnr_val, ssim_val = compute_psnr_ssim(decoded_cv, original_cv)
             lpips_val = compute_lpips(decoded_cv, original_cv, loss_fn_alex, device)
@@ -268,8 +267,8 @@ def run_benchmark():
         "Hi",  # len 2
         "Carl",  # len 4
         "Tubingen",  # len 8
-        "CanYouSeeMeHere",  # len 16
-        "HowCoolIsWaterBench?LikeyCooool",  # len 32
+        "CanYouSeeMeHere",  # len 15
+        "HowCoolIsWaterBench?LikeyCoool",  # len 30
     ]
     results = []
     for msg in messages:
