@@ -1,0 +1,30 @@
+
+\begin{table*}[h!]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.2cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm}}
+\toprule
+\multirow[b]{4}{*}{\raisebox{-0.6ex}{\textbf{Method}}} 
+& \multicolumn{10}{c}{\textbf{Message length}} \\
+\cmidrule(lr){2-11}
+& \multicolumn{2}{c}{2} & \multicolumn{2}{c}{4} & \multicolumn{2}{c}{8} & \multicolumn{2}{c}{15} & \multicolumn{2}{c}{32} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
+& \multicolumn{10}{c}{\textbf{Similarity score}} \\
+\cmidrule(lr){2-11}
+& Ratcliff & Accuracy & Ratcliff & Accuracy & Ratcliff & Accuracy & Ratcliff & Accuracy & Ratcliff & Accuracy \\
+\midrule
+DWT-DCT & 0.01 $\pm$ 0.04 & - & 0.01 $\pm$ 0.04 & - & 0.01 $\pm$ 0.04 & - & 0.01 $\pm$ 0.04 & - & 0.02 $\pm$ 0.04 & - \\
+LBS & 0.02 $\pm$ 0.06 & - & 0.03 $\pm$ 0.06 & - & 0.03 $\pm$ 0.05 & - & 0.04 $\pm$ 0.05 & - & 0.05 $\pm$ 0.05 & - \\
+MBRS & 0.33 $\pm$ 0.13 & - & 0.32 $\pm$ 0.10 & - & 0.32 $\pm$ 0.09 & - & 0.29 $\pm$ 0.07 & - & 0.29 $\pm$ 0.06 & - \\
+RAW & - & 0.92 $\pm$ 0.07 & - & 0.92 $\pm$ 0.07 & - & 0.92 $\pm$ 0.07 & - & 0.92 $\pm$ 0.07 & - & 0.92 $\pm$ 0.07 \\
+VINE & 0.02 $\pm$ 0.06 & - & 0.03 $\pm$ 0.06 & - & 0.03 $\pm$ 0.05 & - & 0.04 $\pm$ 0.05 & - & 0.05 $\pm$ 0.05 & - \\
+\bottomrule
+\end{tabular}
+
+\vspace{6pt}
+\caption{Ratcliff/Obershelp and Accuracy (mean $\pm$ std) across methods and message lengths. Attack: Attack Blur.}
+\label{tab:results-attack_blur}
+\end{table*}
