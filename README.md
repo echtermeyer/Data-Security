@@ -2,6 +2,8 @@
 
 A comprehensive watermarking research platform combining **algorithm benchmarking** and an interactive **web application** for exploring and testing image watermarking techniques.
 
+The research paper and presentation slides are available in [`docs/`](docs/) ([Paper](docs/DEDS_Paper.pdf) | [Presentation](docs/DEDS_Presentation.pdf)).
+
 ---
 
 ## Overview
