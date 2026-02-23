@@ -1,0 +1,33 @@
+% Auto-generated table (methods as rows, message LENGTH as columns)
+% Required in preamble:
+% \usepackage{booktabs}
+% \usepackage{array}
+% (optional spacing): \usepackage{caption}
+
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.2cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm}}
+\toprule
+\multicolumn{1}{l}{} & \multicolumn{10}{c}{\textbf{Message length}} \\
+\textbf{method} & \multicolumn{2}{c}{2} & \multicolumn{2}{c}{4} & \multicolumn{2}{c}{8} & \multicolumn{2}{c}{15} & \multicolumn{2}{c}{32} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
+\multicolumn{1}{l}{} & \multicolumn{10}{c}{\textbf{Similarity score}} \\
+ & Ratcliff & Jaccard & Ratcliff & Jaccard & Ratcliff & Jaccard & Ratcliff & Jaccard & Ratcliff & Jaccard \\
+\midrule
+DWT-DCT & 0.95 $\pm$ 0.22 & 0.95 $\pm$ 0.22 & 0.92 $\pm$ 0.21 & 0.90 $\pm$ 0.24 & 0.92 $\pm$ 0.21 & 0.91 $\pm$ 0.23 & 0.93 $\pm$ 0.21 & 0.92 $\pm$ 0.22 & 0.87 $\pm$ 0.25 & 0.85 $\pm$ 0.26 \\
+LBS & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 \\
+MBRS & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 \\
+RAW & - & - & - & - & - & - & - & - & - & - \\
+VINE & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 & 1.00 $\pm$ 0.00 \\
+\bottomrule
+\end{tabular}
+
+\caption{Ratcliff/Obershelp and Jaccard (mean $\pm$ std) across methods and message lengths.}
+\label{tab:ratcliff-jaccard-methods-lengths}
+
+\vspace{6pt} % <-- adds space below the table before text
+\end{table*}
