@@ -2,7 +2,15 @@
 
 A comprehensive watermarking research platform combining **algorithm benchmarking** and an interactive **web application** for exploring and testing image watermarking techniques.
 
+<p align="center">
+  <img src="docs/pipeline.png" alt="Benchmarking Pipeline" width="800"/>
+</p>
+
+<p align="center"><em>Figure 1: Our benchmarking pipeline follows a three step process given an image: (1) encode a message as an invisible watermark in the image using one of the methods discussed in \autoref{sec:related_work}, (2) compute image quality metrics on the watermarked image to assess its imperceptibility, (3) attack the watermarked image with a transformation (e.g. cropping the image) (4) use the methods decoder to extract the message from the attacked watermarked image and (5) compute watermark detection metrics. </em></p>
+
 The research paper and presentation slides are available in [`docs/`](docs/) ([Paper](docs/DEDS_Paper.pdf) | [Presentation](docs/DEDS_Presentation.pdf)).
+
+
 
 ---
 
