@@ -53,13 +53,15 @@ class Method_MBRS(MethodBase):
 
         # Path to encoder/decoder checkpoint (absolute path)
         EC_path = os.path.join(result_folder, "models", f"EC_{model_epoch}.pth")
-        print("Loading MBRS model from:", EC_path)
-        print("Exists?", os.path.exists(EC_path))  # debug
 
-        self.network.load_model_ed(EC_path, self.device)
-
-        self.network.encoder_decoder.eval()
-        self.network.discriminator.eval()
+        if not os.path.exists(EC_path):
+            print(f"[MBRS] WARNING: model weights not found at {EC_path}, running in mock mode.")
+            self._mock = True
+        else:
+            self._mock = False
+            self.network.load_model_ed(EC_path, self.device)
+            self.network.encoder_decoder.eval()
+            self.network.discriminator.eval()
 
         # --- 3) Preprocessing ---
         self.to_tensor = transforms.Compose(
@@ -134,6 +136,8 @@ class Method_MBRS(MethodBase):
     # ---------- API used by your benchmark ----------
 
     def encode(self, img_pil: Image.Image, msg: str) -> Image.Image:
+        if self._mock:
+            return img_pil
         img = self.to_tensor(img_pil.convert("RGB"))  # [3,H,W], 0..1
         img = img.unsqueeze(0).to(self.device)  # [1,3,H,W]
 
@@ -151,6 +155,8 @@ class Method_MBRS(MethodBase):
         return wm_pil
 
     def decode(self, img_pil: Image.Image) -> str:
+        if self._mock:
+            return ""
         img = self.to_tensor(img_pil.convert("RGB"))
         img = img.unsqueeze(0).to(self.device)
 

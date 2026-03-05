@@ -40,13 +40,11 @@ from .crypto_utils import verify_signature
 from .vendor.lsb import Method_LSB
 from .vendor.dwtdct import Method_DWTDCT, Method_DWTDCTSVD
 from .vendor.mbrs import Method_MBRS
-from .vendor.vine import Method_VINE
 
 DwtDct = Method_DWTDCT()
 DwtDctScd = Method_DWTDCTSVD()
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 Mbrs = Method_MBRS(device)
-Vine = None # Method_VINE(device)
 Lsb = Method_LSB()
 
 
@@ -65,9 +63,6 @@ MOCK_BENCHMARK_RESULTS: Dict[WatermarkAlgorithm, AlgorithmMetrics] = {
     ),
     "mbrs": AlgorithmMetrics(
         embed_time=0.189, extract_time=0.171, psnr=40.1, ssim=0.978
-    ),
-    "vine": AlgorithmMetrics(
-        embed_time=0.842, extract_time=0.731, psnr=44.8, ssim=0.995
     ),
 }
 
@@ -102,8 +97,6 @@ async def embed_watermark_endpoint(request: EmbedRequest):
             wm_image = DwtDctScd.encode(pil_img, request.message)
         elif request.algorithm == "mbrs":
             wm_image = Mbrs.encode(pil_img, request.message)
-        elif request.algorithm == "vine":
-            wm_image = Vine.encode(pil_img, request.message)
         else:
             raise HTTPException(status_code=400, detail="Unsupported algorithm")
 
@@ -135,8 +128,6 @@ async def extract_watermark_endpoint(request: ExtractRequest):
             msg = DwtDctScd.decode(pil_img)
         elif request.algorithm == "mbrs":
             msg = Mbrs.decode(pil_img)
-        elif request.algorithm == "vine":
-            msg = Vine.decode(pil_img)
         else:
             success = False
             msg = "Unsupported algorithm"
@@ -255,7 +246,7 @@ async def claim_ownership(request: ClaimOwnershipRequest):
                 detail=f"User ID {request.claim.user_id} not registered. Please register first.",
             )
 
-        claim_dict = request.claim.model_dump()
+        claim_dict = request.claim.model_dump(exclude_none=True)
         if request.algorithm != "lsb":
             raise HTTPException(
                 status_code=400,

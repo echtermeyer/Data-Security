@@ -65,14 +65,6 @@ function ChallengeMode() {
       description:
         "Deep Neural Network (DNN) based method for watermarking, highly robust against JPEG compression.",
     },
-    {
-      id: "vine",
-      name: "VINE",
-      fullName: "Generative Prior Watermarking",
-      robustness: 5, // Very high robustness (Generative model-based against various edits)
-      description:
-        "Advanced watermarking method using generative priors to enhance robustness against complex image editing.",
-    },
   ];
 
   const convertImageToBase64 = (imageUrl) => {
@@ -85,7 +77,7 @@ function ChallengeMode() {
         canvas.height = img.height;
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0);
-        const dataURL = canvas.toDataURL("image/jpeg", 1.0);
+        const dataURL = canvas.toDataURL("image/png");
         resolve(dataURL.split(",")[1]);
       };
       img.onerror = reject;
@@ -155,7 +147,7 @@ function ChallengeMode() {
 
       const data = await response.json();
 
-      const newWatermarkedImage = `data:image/jpeg;base64,${data.watermarked_image}`;
+      const newWatermarkedImage = `data:image/png;base64,${data.watermarked_image}`;
 
       setWatermarkedImage(newWatermarkedImage);
       setAttackedImage(newWatermarkedImage);
@@ -181,7 +173,7 @@ function ChallengeMode() {
   };
 
   useEffect(() => {
-    if (!watermarkedImage || status === "idle" || status === "error") return;
+    if (!watermarkedImage) return;
 
     const img = new Image();
     img.onload = () => {
@@ -254,16 +246,13 @@ function ChallengeMode() {
 
       ctx.restore();
 
-      const newAttackedImage = canvas.toDataURL(
-        "image/jpeg",
-        compression / 100
-      );
+      const mimeType = compression < 100 ? "image/jpeg" : "image/png";
+      const quality = compression < 100 ? compression / 100 : undefined;
+      const newAttackedImage = canvas.toDataURL(mimeType, quality);
       setAttackedImage(newAttackedImage);
 
-      // Only change status to "attacking" if not already verified
-      if (status !== "verified") {
-        setStatus("attacking");
-      }
+      setStatus("attacking");
+      setExtractedMessage(null);
       const attacks =
         [brightness, blur, noise, rotation, cropAmount].filter((v) => v !== 0)
           .length + (compression < 100 ? 1 : 0);
@@ -279,7 +268,6 @@ function ChallengeMode() {
     rotation,
     compression,
     cropAmount,
-    status,
   ]);
 
   const handleExtract = async () => {
@@ -914,7 +902,7 @@ function ChallengeMode() {
                 {/* Extract Button */}
                 <button
                   onClick={handleExtract}
-                  disabled={isLoading || status === "embedded"}
+                  disabled={isLoading}
                   className="w-full mt-4 sm:mt-6 bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base hover:from-cyan-500 hover:to-blue-500 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-cyan-500/50 transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   {isLoading
